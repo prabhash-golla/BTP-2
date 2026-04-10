@@ -450,7 +450,7 @@
         </div>
         <div class="nav-menu">
             <div class="nav-item active" data-target="intro">Background</div>
-            <div class="nav-item" data-target="btp1">BTP-1 Recap</div>
+            <div class="nav-item" data-target="btp1">BTP-I Recap</div>
             <div class="nav-item" data-target="primitives">Primitives</div>
             <div class="nav-item" data-target="regabe">Reg-ABE</div>
             <div class="nav-item" data-target="optimization">Optimization</div>
@@ -573,7 +573,7 @@
                 <div class="grid-2-1" style="margin-top: 20px;">
                     <div class="card accent-purple" style="display: flex; flex-direction: column;">
                         <h3>Chameleon Encryption & Garbled Circuits</h3>
-                        <p>Instead of compiling field mathematics directly into gates, we used <strong>Decryption-as-path-verification</strong>.</p>
+                        <p>Instead of compiling field mathematics directly into gates, we used <strong>decryption-as-path-verification</strong>.</p>
                         <ul style="font-size: 0.9em; margin-bottom: 0;">
                             <li><strong>Chameleon Hash:</strong> A collision-resistant hash with a trapdoor.</li>
                             <li><strong>Circuit Chain:</strong> Ciphertext contains $n+1$ garbled circuits $(\tilde{P}_0, ..., \tilde{P}_{n-1}, \tilde{T})$.</li>
@@ -611,7 +611,7 @@
 
             <section data-sec="btp1">
                 <h2>BTP-I Post-Presentation Improvements</h2>
-                <p>Following the BTP-1 presentation, we introduced optimizations to mitigate the massive computational bottlenecks of the garbled chain.</p>
+                <p>Following the BTP-I presentation, we introduced optimizations to mitigate the massive computational bottlenecks of the garbled chain.</p>
                 
                 <div class="grid-2">
                     <div class="card accent-gold">
@@ -810,7 +810,7 @@
                             <li><strong>Secret Keys & Curator's HSK</strong> live in the span of $\mathbb{B}^*$ (in $\mathbb{G}_2$).</li>
                             <li><strong>Blinding Subspaces:</strong> Cross-terms generated during curator aggregation are placed in specific subspaces (e.g., spanned by $b_2, b_3$).</li>
                         </ul>
-                        <p style="font-size: 0.9em; color: var(--primary); margin-top: 15px;"><strong>Result:</strong> During decryption, orthogonality mathematically guarantees $e(b_{data}, b_{blind}^*) = 1$, vanishing the noise while preserving the secret payload.</p>
+                        <p style="font-size: 0.9em; color: var(--primary); margin-top: 15px;"><strong>Result:</strong> During decryption, orthogonality mathematically guarantees $e(b_{data}, b_{blind}^*) = 1$, canceling the blinding factors while preserving the secret payload.</p>
                     </div>
                 </div>
             </section>
@@ -1175,7 +1175,7 @@
                         <ol style="font-size: 0.85em; padding-left: 20px;">
                             <li>Adversary chooses messages $m_0, m_1$ and challenge policy $y^*$.</li>
                             <li>Challenger encrypts $m_b$ (random $b$) under $y^*$.</li>
-                            <li>Adversary queries $Register(x_i)$ for any attribute set where $P(x_i, y^*) = 0$ (the challenge policy must not be satisfied).</li>
+                            <li>Adversary queries $Register(x_i)$ for any attribute set where $P(x_i, y^*) = 0$ (ensuring the challenge policy cannot be satisfied).</li>
                             <li>Adversary guesses $b'$. Advantage must be negligible: $|\Pr[b'=b] - 1/2| \le \epsilon$.</li>
                         </ol>
                     </div>
@@ -1224,7 +1224,7 @@
                     </div>
 
                     <div class="card accent-purple">
-                        <h3>Pre-Constrained Innovation (PReg-IPFE)</h3>
+                        <h3>Pre-Constrained Innovation (PReg-QFE)</h3>
                         <p style="font-size: 0.85em;"><strong>The Problem:</strong> Computing quadratic functions directly produces non-linear terms that break the Curator's clean linear aggregation symmetry.</p>
                         <p style="font-size: 0.85em;"><strong>The Solution:</strong> Separate function definition from user registration. The master matrix defining the function space is embedded directly into the CRS during trusted setup.</p>
                         <p style="font-size: 0.85em; color: var(--primary);">Curator workload remains purely linear (simple multiplications). Non-linear complexity is enforced dynamically during decryption pairing.</p>
@@ -1258,10 +1258,10 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 12px; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(167,139,250,0.06)); border: 1px solid rgba(167,139,250,0.2); border-radius: 12px; padding: 14px 22px;">
+                <!-- <div style="margin-top: 12px; background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(167,139,250,0.06)); border: 1px solid rgba(167,139,250,0.2); border-radius: 12px; padding: 14px 22px;">
                     <h4 style="font-size: 0.9em; margin: 0 0 6px 0; color: var(--secondary);">Research Frontier</h4>
                     <p style="font-size: 0.75em; margin: 0; color: var(--text-muted);">These challenges represent the cutting edge of cryptographic research. Solving even one would constitute a major contribution to post-quantum secure decentralized systems, potentially enabling trustless encryption at global scale.</p>
-                </div>
+                </div> -->
             </section>
 
             <section data-sec="future">
