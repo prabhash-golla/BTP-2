@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pairing-Based Registered Attribute-Based Encryption</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+
+    <style>
+        :root {
+            /* Uniform Dark Professional Theme */
+            --bg-base: #070B14;
+            --bg-gradient: radial-gradient(circle at center, #111A2E 0%, #070B14 100%);
+            --card-bg: rgba(17, 26, 46, 0.7);
+            --card-border: rgba(56, 189, 248, 0.2);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            
+            /* Accents */
+            --primary: #38BDF8;      /* Sky Blue */
+            --primary-glow: rgba(56, 189, 248, 0.4);
+            --secondary: #A78BFA;    /* Purple */
+            --success: #10B981;      /* Emerald */
+            --warning: #F59E0B;      /* Amber */
+            --danger: #EF4444;       /* Red */
+            
+            /* Text */
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            
+            /* Typography */
+            --font-title: 'Rajdhani', sans-serif;
+            --font-main: 'Inter', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: var(--bg-base);
+            background-image: var(--bg-gradient);
+            font-family: var(--font-main);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* -------------------------------------------
+           PERSISTENT TOP NAVBAR
+        ------------------------------------------- */
+        #presentation-navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(7, 11, 20, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-family: var(--font-title);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        .nav-brand span {
+            color: var(--primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 35px;
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-muted);
+            height: 100%;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            box-shadow: 0 -2px 10px var(--primary-glow);
+        }
+
+        /* Floating Actions */
+        .floating-actions {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            background: rgba(17, 26, 46, 0.8);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: var(--bg-base);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* -------------------------------------------
+           REVEAL.JS CUSTOMIZATION
+        ------------------------------------------- */
+        .reveal {
+            font-family: var(--font-main);
+            font-size: 22px; /* Base size */
+            color: var(--text-main);
+        }
+
+        /* Push slides down to account for navbar */
+        .reveal .slides {
+            margin-top: 20px; 
+        }
+
+        .reveal .slides section {
+            height: 100%;
+            padding: 40px 0.5in 20px 0.5in !important;
+            box-sizing: border-box;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: var(--font-title);
+            color: var(--text-main);
+            text-transform: none;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            line-height: 1.2;
+        }
+
+        .reveal h2 {
+            font-size: 1.8em;
+            text-align: left;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+
+        .reveal p, .reveal li {
+            font-size: 0.95em;
+            line-height: 1.5;
+            text-align: left;
+            color: var(--text-muted);
+        }
+
+        .reveal strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .reveal ul { margin-left: 1.2em; margin-bottom: 15px; }
+        .reveal li { margin-bottom: 8px; }
+
+        /* Content Grids (To eliminate empty space) */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; width: 100%; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; width: 100%; }
+        .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; width: 100%; }
+        .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 25px; width: 100%; }
+        .flex-col { display: flex; flex-direction: column; gap: 15px; }
+        .flex-row { display: flex; align-items: center; gap: 15px; }
+
+        /* UI Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: left;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .card h3 {
+            font-size: 1.2em;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card.accent-blue { border-left: 4px solid var(--primary); }
+        .card.accent-purple { border-left: 4px solid var(--secondary); }
+        .card.accent-green { border-left: 4px solid var(--success); }
+        .card.accent-red { border-left: 4px solid var(--danger); background: rgba(239, 68, 68, 0.05); }
+        .card.accent-gold { border-left: 4px solid var(--warning); }
+
+        /* Math & Code Blocks */
+        .math-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: var(--font-code);
+            color: var(--primary);
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            overflow-x: auto;
+        }
+        
+        .math-box.inline {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 0 5px;
+            font-size: 0.9em;
+        }
+
+        /* Dense Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--card-border);
+            margin-bottom: 15px;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+        }
+
+        .data-table th {
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--primary);
+            font-weight: 600;
+            font-family: var(--font-title);
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table td strong { color: var(--text-main); }
+        .data-table .highlight-row { background: rgba(56, 189, 248, 0.08); }
+
+        /* Pipelines & Diagrams */
+        .pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .pipeline-node {
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .pipeline-arrow {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .badge-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin: 0 5px 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Progress Bar Override */
+        .reveal .progress { height: 3px; background: rgba(255,255,255,0.1); }
+        .reveal .progress span { background-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+
+        /* Numbered circles */
+        .num-circle {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: var(--bg-base);
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        /* Print Mode */
+        @media print {
+            body { background: #fff !important; color: #000 !important; }
+            #presentation-navbar, .floating-actions { display: none !important; }
+            .reveal .slides section { page-break-after: always !important; visibility: visible !important; display: block !important; opacity: 1 !important; color: #000 !important; padding: 20px !important; }
+            h2, h3, .reveal p, .reveal li { color: #000 !important; }
+            .card { background: #f8f9fa !important; border: 1px solid #ccc !important; color: #000 !important; page-break-inside: avoid; box-shadow: none !important; border-left-width: 4px !important; }
+            .math-box { background: #fff !important; color: #000 !important; border: 1px solid #000 !important; }
+            .data-table th { background: #eee !important; color: #000 !important; }
+            .data-table td { color: #000 !important; border-color: #ccc !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-navbar">
+        <div class="nav-brand">
+            <span>B.TECH</span> PROJECT
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" data-target="intro">Background</div>
+            <div class="nav-item" data-target="btp1">BTP-1 Recap</div>
+            <div class="nav-item" data-target="primitives">Primitives</div>
+            <div class="nav-item" data-target="regabe">Reg-ABE</div>
+            <div class="nav-item" data-target="optimization">Optimization</div>
+            <div class="nav-item" data-target="regfe">Reg-FE</div>
+            <div class="nav-item" data-target="future">Future Work</div>
+        </div>
+    </div>
+
+    <div class="floating-actions">
+        <button class="btn" id="downloadBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download PDF
+        </button>
+    </div>
+
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-sec="intro">
+                <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; padding-top: 20px;">
+                    <div style="margin-bottom: 20px;">
+                        <span class="badge-tag">Spring Semester, 2025-26</span>
+                        <span class="badge-tag">Dual Degree (B.Tech + M.Tech)</span>
+                    </div>
+                    
+                    <h1 style="font-size: 3.5em; margin-bottom: 5px; text-transform: uppercase;">Pairing-Based Registered</h1>
+                    <h1 style="font-size: 3.5em; color: var(--primary); margin-top: 0; text-transform: uppercase;">Attribute-Based Encryption</h1>
+                    
+                    <hr style="border: none; border-top: 2px solid rgba(255,255,255,0.1); margin: 30px 0;">
+                    
+                    <div class="grid-2-1" style="align-items: center;">
+                        <div class="card accent-blue" style="background: transparent; border: none; box-shadow: none; padding: 0; border-left: 4px solid var(--primary); padding-left: 20px;">
+                            <h3 style="font-size: 1.8em; color: var(--text-main); margin-bottom: 5px;">Golla Meghanandh Manvith Prabhash</h3>
+                            <p style="color: var(--primary); font-family: var(--font-code); font-size: 1.2em; margin-top: 0; margin-bottom: 15px;">22CS30027</p>
+                            <p style="margin: 5px 0;"><strong>Supervisor:</strong> Dr. Somindu Chaya Ramanna</p>
+                            <p style="margin: 5px 0;"><strong>Department:</strong> Computer Science and Engineering</p>
+                            <p style="margin: 5px 0;"><strong>Institution:</strong> Indian Institute of Technology Kharagpur</p>
+                        </div>
+                        
+                        <div style="text-align: right; opacity: 0.8;">
+                            <p style="font-size: 0.85em; text-align: right; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 15px;">
+                                "This project shifts focus from theoretically sound but computationally heavy garbled circuits (BTP-I) to highly scalable, practical solutions via Registered Attribute-Based Encryption (Reg-ABE) utilizing bilinear pairings."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="intro">
+                <h2>The Evolution of Access Control</h2>
+                <div class="grid-3">
+                    <div class="card accent-blue flex-col">
+                        <h3>1. Traditional PKE & PKI</h3>
+                        <p>Public Key Encryption (PKE) relies on certificates (CAs) to bind an identity to a public key.</p>
+                        <ul>
+                            <li><strong>Challenge:</strong> Costly infrastructure.</li>
+                            <li><strong>Challenge:</strong> Revocation management.</li>
+                            <li><strong>Challenge:</strong> Requires point-to-point connections.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card accent-purple flex-col">
+                        <h3>2. Identity-Based (IBE)</h3>
+                        <p>Shamir (1984). Uses a user's unique identity (e.g., email) directly as the public key.</p>
+                        <ul>
+                            <li><strong>Advantage:</strong> No certificates needed.</li>
+                            <li><strong>Flaw:</strong> Introduces the Private Key Generator (PKG) problem.</li>
+                            <li><strong>Flaw:</strong> Lack of fine-grained policy control.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card accent-green flex-col">
+                        <h3>3. Attribute-Based (ABE)</h3>
+                        <p>Sahai & Waters (2005). Embeds boolean access policies directly into the cryptographic math.</p>
+                        <ul>
+                            <li><strong>Advantage:</strong> One-to-many encryption (e.g., <code>Director OR Manager</code>).</li>
+                            <li><strong>Flaw:</strong> Retains the PKG central authority problem.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="intro">
+                <h2>The Key Escrow Bottleneck</h2>
+                <p style="font-size: 0.85em;">The primary barrier to widespread ABE deployment in zero-trust cloud environments is the fundamental trust model required during key generation.</p>
+                
+                <div class="grid-2" style="margin-top: 10px;">
+                    <div class="card accent-red flex-col" style="padding: 15px;">
+                        <h3 style="color: var(--danger); font-size: 1.1em; margin-bottom: 8px;">The Central PKG Vulnerability</h3>
+                        <p style="font-size: 0.82em; margin-bottom: 5px;">To issue a functional secret key, the PKG must use the Master Secret Key (MSK):</p>
+                        <div class="math-box" style="border-color: var(--danger); color: var(--danger); padding: 10px; margin: 8px 0; font-size: 0.95em;">
+                            $SK_{attr} \leftarrow f(MSK, Attributes)$
+                        </div>
+                        <ul style="font-size: 0.78em; margin-bottom: 0;">
+                            <li style="margin-bottom: 4px;"><strong>Single Point of Failure:</strong> The PKG can decrypt <em>every</em> ciphertext in the network.</li>
+                            <li style="margin-bottom: 0;"><strong>Malicious Provider:</strong> If the cloud provider is compromised, total system privacy is permanently revoked.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card accent-green flex-col" style="padding: 15px;">
+                        <h3 style="color: var(--success); font-size: 1.1em; margin-bottom: 8px;">The Reg-ABE Paradigm Shift</h3>
+                        <p style="font-size: 0.82em; margin-bottom: 5px;">Registered ABE replaces the PKG with a non-privileged, deterministic <strong>Key Curator</strong>.</p>
+                        <div class="math-box" style="border-color: var(--success); color: var(--success); padding: 10px; margin: 8px 0; font-size: 0.95em;">
+                            $(sk_u, pk_u) \leftarrow KeyGen(crs_{local})$
+                        </div>
+                        <ul style="font-size: 0.78em; margin-bottom: 0;">
+                            <li style="margin-bottom: 4px;"><strong>Client-Side Keygen:</strong> Users compute their own secrets.</li>
+                            <li style="margin-bottom: 4px;"><strong>Trustless Aggregation:</strong> Curator only manages public keys.</li>
+                            <li style="margin-bottom: 0;"><strong>Post-Compromise Security:</strong> Curator database leaks reveal zero user secrets.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="btp1">
+                <h2>BTP-I Recap: IBE from Standard CDH</h2>
+                <p>Prior to this semester, we implemented the Döttling-Garg (CRYPTO 2017) non-black-box architecture to prove escrow-free IBE is theoretically possible using only standard Computational Diffie-Hellman (CDH) assumptions.</p>
+                
+                <div class="grid-2-1" style="margin-top: 15px;">
+                    <div class="card accent-purple">
+                        <h3>Chameleon Encryption & Garbled Circuits</h3>
+                        <p>Instead of compiling field mathematics directly into gates, we used <strong>Decryption-as-path-verification</strong>.</p>
+                        <ul style="font-size: 0.9em;">
+                            <li><strong>Chameleon Hash:</strong> A collision-resistant hash with a trapdoor.</li>
+                            <li><strong>Circuit Chain:</strong> Ciphertext contains $n+1$ garbled circuits $(\tilde{P}_0, ..., \tilde{P}_{n-1}, \tilde{T})$.</li>
+                            <li><strong>Logic:</strong> Output of $\tilde{P}_i$ evaluates Chameleon encryptions of labels for $\tilde{P}_{i+1}$.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card accent-blue flex-col" style="justify-content: center;">
+                        <h3 style="font-size: 1.1em; text-align: center;">Evaluation Chain</h3>
+                        <div class="pipeline flex-col">
+                            <div class="pipeline-node">Input for $\tilde{P}_0$</div>
+                            <div class="pipeline-arrow">↓ unlocks ↓</div>
+                            <div class="pipeline-node">Circuit $\tilde{P}_1$</div>
+                            <div class="pipeline-arrow">↓ unlocks ↓</div>
+                            <div class="pipeline-node" style="border-style: dashed;">... $\tilde{P}_{n-1}$</div>
+                            <div class="pipeline-arrow">↓ unlocks ↓</div>
+                            <div class="pipeline-node" style="border-color: var(--secondary);">Final PKE Message</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="btp1">
+                <h2>BTP-I Post-Presentation Optimizations</h2>
+                <p>Following the BTP-1 presentation, we introduced optimizations to mitigate the massive computational bottlenecks of the garbled chain.</p>
+                
+                <div class="grid-2">
+                    <div class="card accent-gold">
+                        <h3>1. Tree Arity Optimization</h3>
+                        <p>In the naive construction, a 512-bit identity requires a depth of 512 sequential circuits.</p>
+                        <ul style="font-size: 0.9em;">
+                            <li>We restructured the evaluation tree to process the identity in blocks ($128$-bit segments).</li>
+                            <li>$4 \times 128$ bits for a 512-bit ID significantly reduces circuit depth.</li>
+                        </ul>
+                        <div class="math-box inline" style="margin-top: 10px; font-size: 0.85em;">
+                            $d = n / \log_2(a)$
+                        </div>
+                    </div>
+                    
+                    <div class="card accent-gold">
+                        <h3>2. Label Chunking & AES Integration</h3>
+                        <p>We utilized the active label $\tilde{\Pi}_i$ to derive a symmetric key $K$, using standard AES encryption to secure the path.</p>
+                        <div class="math-box" style="font-size: 0.9em; text-align: left; padding-left: 30px;">
+                            $K \leftarrow KDF(\tilde{\Pi}_i)$ <br>
+                            $C_{out} = AES_K(Next\ Label)$ <br>
+                            $ct = C_{out} \oplus GC\ Payload$
+                        </div>
+                        <p style="font-size: 0.9em; margin-bottom: 0;">Reduced wire labels from 512-bit to 128-bit.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="btp1">
+                <h2>The Practical Infeasibility of Garbled Crypto</h2>
+                <p>Despite symmetric-key and arity optimizations, our BTP-I analysis proved that non-black-box CDH constructions are fundamentally disqualified from real-world dynamic network scenarios.</p>
+
+                <table class="data-table" style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">Operation</th>
+                            <th style="width: 30%;">Native Cost</th>
+                            <th style="width: 40%;">Cost as Garbled Boolean Circuit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Elliptic Curve Scalar Mult.</strong></td>
+                            <td>$\approx 1$ group op</td>
+                            <td style="color: var(--danger);"><strong>$10^6 - 10^9$ gates</strong> (Massive Blow-up)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Standard Field Multiplication</strong></td>
+                            <td>$\approx 1$ field op</td>
+                            <td style="color: var(--danger);">Thousands of gates per operation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AES-128 (Our Optimization)</strong></td>
+                            <td>Hardware Accelerated</td>
+                            <td>3,000 - 5,000 gates</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="card accent-red" style="margin-top: 20px; text-align: center; padding: 15px;">
+                    <strong>Ultimate Conclusion of BTP-I:</strong> Ciphertexts balloon to multi-megabyte capacities per transmission. To achieve deployable escrow-free systems, we must abandon boolean circuits and return to native algebraic "black-box" operations.
+                </div>
+            </section>
+
+            <section data-sec="primitives">
+                <h2>Algebraic Foundations & Assumptions</h2>
+                <p>Transitioning to pairing-based cryptography requires understanding the specific hardness assumptions that anchor semantic security.</p>
+                
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card accent-blue">
+                        <h3>Subgroup Decision Assumption</h3>
+                        <p style="font-size: 0.9em;">Anchors legacy composite-order cryptography.</p>
+                        <ul style="font-size: 0.85em;">
+                            <li>Group order $N = p_1 p_2 p_3$</li>
+                            <li>Adversary cannot discern if an element resides in the full group $\mathbb{G}_N$ or a constrained subgroup $\mathbb{G}_{p1}$.</li>
+                            <li>Allows for independent "canceling" of parameters, but requires huge (1024-2048 bit) key sizes to prevent factorization of $N$.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card accent-purple">
+                        <h3>$k$-Linear ($k$-Lin) Assumption</h3>
+                        <p style="font-size: 0.9em;">Anchors modern prime-order cryptography. Generalizes DDH ($k=1$) and DLIN ($k=2$).</p>
+                        <ul style="font-size: 0.85em;">
+                            <li>Given vectors in an affine subspace of dimension $k$.</li>
+                            <li>Computationally intractable to determine if a challenge vector belongs to that specific subspace or is distributed uniformly at random across the entire vector space.</li>
+                            <li>Allows for 256-bit parameter sizes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="primitives">
+                <h2>Asymmetric Pairings</h2>
+                <p style="font-size: 0.85em;">A pairing is a computable map $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ bridging elements from two prime-order groups. The choice of pairing type profoundly affects efficiency and security.</p>
+
+                <div class="grid-3" style="margin-top: 15px;">
+                    <div class="card accent-purple" style="padding: 15px;">
+                        <h3 style="font-size: 1.05em; color: var(--secondary);">Type II Pairing</h3>
+                        <p style="font-size: 0.8em;">An efficiently computable homomorphism exists <strong>in one direction</strong>:</p>
+                        <div class="math-box" style="font-size: 0.8em; padding: 8px; margin: 8px 0;">
+                            $\phi: \mathbb{G}_2 \rightarrow \mathbb{G}_1$
+                        </div>
+                        <ul style="font-size: 0.78em; margin-bottom: 0;">
+                            <li><strong>Structure:</strong> $\mathbb{G}_1 \neq \mathbb{G}_2$, but map $\phi$ links them.</li>
+                            <li><strong>Advantage:</strong> Some protocols simplify with directional maps.</li>
+                            <li><strong>Drawback:</strong> The homomorphism leaks structural info, limiting proof strategies.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card accent-blue" style="padding: 15px;">
+                        <h3 style="font-size: 1.05em;">Type III Pairing</h3>
+                        <p style="font-size: 0.8em;"><strong>No efficient homomorphism</strong> exists between $\mathbb{G}_1$ and $\mathbb{G}_2$ in either direction.</p>
+                        <div class="math-box" style="font-size: 0.8em; padding: 8px; margin: 8px 0;">
+                            $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$
+                        </div>
+                        <ul style="font-size: 0.78em; margin-bottom: 0;">
+                            <li><strong>Bilinearity:</strong> $e(u^a, v^b) = e(u,v)^{ab}$</li>
+                            <li><strong>Non-degeneracy:</strong> $e(g_1, g_2) \neq 1_{\mathbb{G}_T}$</li>
+                            <li><strong>Computability:</strong> Poly-time for all valid inputs.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card accent-gold" style="padding: 15px;">
+                        <h3 style="font-size: 1.05em; color: var(--warning);">Why Type III?</h3>
+                        <p style="font-size: 0.8em;">The absence of any connecting homomorphism provides the strongest security guarantees:</p>
+                        <ul style="font-size: 0.78em; margin-bottom: 0;">
+                            <li><strong>Compact Keys:</strong> Built on BLS12-381 curves with ~256-bit parameters.</li>
+                            <li><strong>Faster Compute:</strong> Smallest group elements yield fastest pairings.</li>
+                            <li><strong>Tightest Proofs:</strong> No structure leakage means tightest security reductions under $k$-Lin.</li>
+                            <li><strong>Industry Standard:</strong> Used in zk-SNARKs, BLS signatures, and Ethereum 2.0.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="math-box" style="margin-top: 15px; font-size: 0.9em;">
+                    $e(g^a, g^b) = e(g,g)^{ab}$ — enables hidden multiplicative checks without revealing exponents
+                </div>
+            </section>
+
+            <section data-sec="primitives">
+                <h2>Dual Pairing Vector Spaces (DPVS)</h2>
+                <p>To simulate composite subgroup cancellations in highly efficient prime-order spaces, we shift dimensions: <strong>replacing numbers with vectors</strong>.</p>
+                
+                <div class="grid-2">
+                    <div class="card accent-blue">
+                        <h3>Orthogonal Bases</h3>
+                        <p style="font-size: 0.9em;">Setup algorithm generates two strictly orthogonal bases:</p>
+                        <div class="math-box" style="font-size: 0.85em; text-align: left; padding-left: 20px;">
+                            $\mathbb{B} = (b_1, b_2, b_3, b_4) \in \mathbb{G}_1^4$ <br><br>
+                            $\mathbb{B}^* = (b_1^*, b_2^*, b_3^*, b_4^*) \in \mathbb{G}_2^4$
+                        </div>
+                        <p style="font-size: 0.9em;">Dot-product pairing yields orthogonality:</p>
+                        <div class="math-box" style="font-size: 0.85em;">
+                            $e(b_i, b_j^*) = \begin{cases} g_T^\psi & \text{if } i = j \\ 1 & \text{if } i \neq j \end{cases}$
+                        </div>
+                    </div>
+
+                    <div class="card accent-purple">
+                        <h3>Architectural Roles</h3>
+                        <ul style="font-size: 0.9em;">
+                            <li><strong>Master Public Key & Ciphertexts</strong> live in the span of $\mathbb{B}$ (in $\mathbb{G}_1$).</li>
+                            <li><strong>Secret Keys & Curator's HSK</strong> live in the span of $\mathbb{B}^*$ (in $\mathbb{G}_2$).</li>
+                            <li><strong>Blinding Subspaces:</strong> Cross-terms generated during curator aggregation are placed in specific subspaces (e.g., spanned by $b_2, b_3$).</li>
+                        </ul>
+                        <p style="font-size: 0.9em; color: var(--primary); margin-top: 15px;"><strong>Result:</strong> During decryption, orthogonality mathematically guarantees $e(b_{data}, b_{blind}^*) = 1$, vanishing the noise while preserving the secret payload.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="primitives">
+                <h2>Linear Secret Sharing Schemes (LSSS)</h2>
+                <p>Raw boolean logic must be mathematically converted into matrices to enforce policies within pairing environments.</p>
+
+                <div class="grid-2-1" style="align-items: center;">
+                    <div class="card accent-blue">
+                        <h3>LSSS Construction</h3>
+                        <ul style="font-size: 0.85em;">
+                            <li><strong>Policy Matrix:</strong> $\ell \times n$ matrix $M$ with mapping function $\rho$ (rows $\to$ attributes).</li>
+                            <li><strong>Secret Vector:</strong> Encryptor hides secret $s$ inside $\vec{v} = (s, r_2, ..., r_n)^\top$.</li>
+                            <li><strong>Share Generation:</strong> Multiplication $M \cdot \vec{v}$ yields the shares.</li>
+                            <li><strong>Reconstruction:</strong> If attributes satisfy the structure, user derives constants $c_i$ to solve $\sum c_i(M_i \cdot \vec{v}) = s$.</li>
+                        </ul>
+                        <div class="card accent-green" style="margin-top: 15px; padding: 10px; border-radius: 6px;">
+                            <strong>Non-Monotone Span Programs:</strong> LSSS mathematically represents NOT-gates via orthogonal vectors, natively supporting exclusionary logic (e.g., <code>Director AND NOT Contractor</code>).
+                        </div>
+                    </div>
+
+                    <div class="card" style="background: rgba(0,0,0,0.5); padding: 15px; text-align: center;">
+                        <h4 style="font-size: 1em; color: var(--text-muted); margin-bottom: 15px;">Matrix Projection Visualization</h4>
+                        <div class="math-box" style="background: transparent; border: none; padding: 0; font-size: 0.9em; text-align: left;">
+                            $$ \begin{bmatrix} 1 & 0 & -1 \\ 0 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix} \times \begin{bmatrix} s \\ r_2 \\ r_3 \end{bmatrix} = \begin{bmatrix} \lambda_1 \\ \lambda_2 \\ \lambda_3 \end{bmatrix} $$
+                        </div>
+                        <p style="font-size: 0.75em; color: var(--text-muted); margin-top: 15px;">
+                            *Shares $\lambda_i$ embed the payload. Only correct linear combinations of $\lambda_i$ cancel out random factors $r_x$.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="regabe">
+                <h2 style="margin-bottom: 8px;">The Key Curator Model: Core Algorithms</h2>
+                <p style="font-size: 0.9em; margin-bottom: 12px;">The centralized PKG is replaced by a transparent curator executing deterministic polynomial-time algorithms.</p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                    <div class="card accent-blue" style="padding: 12px 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 13px; flex-shrink: 0;">1</span><h3 style="margin: 0; font-size: 1em;">Setup($1^\lambda, 1^N$)</h3></div>
+                        <p style="font-size: 0.8em; margin: 0;">Generates CRS including DPVS bases. <strong>Setup party goes offline permanently.</strong></p>
+                    </div>
+                    <div class="card accent-blue" style="padding: 12px 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 13px; flex-shrink: 0;">2</span><h3 style="margin: 0; font-size: 1em;">KeyGen($crs$)</h3></div>
+                        <p style="font-size: 0.8em; margin: 0;">Run locally. User samples $sk_i \leftarrow \mathbb{Z}_p$, publishes $pk_i = g^{sk_i}$. Curator never sees $sk_i$.</p>
+                    </div>
+                    <div class="card accent-purple" style="padding: 12px 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 13px; flex-shrink: 0;">3</span><h3 style="margin: 0; font-size: 1em;">Register</h3></div>
+                        <p style="font-size: 0.8em; margin: 0;">User sends verified attributes and $pk_i$ to curator for the public directory.</p>
+                    </div>
+                    <div class="card accent-purple" style="padding: 12px 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 13px; flex-shrink: 0;">4</span><h3 style="margin: 0; font-size: 1em;">Update</h3></div>
+                        <p style="font-size: 0.8em; margin: 0;">Curator aggregates keys to form global $mpk$ and computes $hsk_i$ for cross-term blinding.</p>
+                    </div>
+                    <div class="card accent-green" style="padding: 12px 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 13px; flex-shrink: 0;">5</span><h3 style="margin: 0; font-size: 1em;">Encrypt</h3></div>
+                        <p style="font-size: 0.8em; margin: 0;">Uses global $mpk$ and policy matrix $y$. Ciphertext size is $O(|y|)$.</p>
+                    </div>
+                    <div class="card accent-green" style="padding: 12px 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 13px; flex-shrink: 0;">6</span><h3 style="margin: 0; font-size: 1em;">Decrypt</h3></div>
+                        <p style="font-size: 0.8em; margin: 0;">Combines local $sk_i$ and public $hsk_i$. Bilinear pairing isolates exact slot. LSSS unblinds message.</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 0; flex-wrap: wrap;">
+                    <span style="background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Setup</span>
+                    <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
+                    <span style="background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">KeyGen</span>
+                    <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
+                    <span style="background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Register</span>
+                    <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
+                    <span style="background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Update</span>
+                    <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
+                    <span style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Encrypt / Decrypt</span>
+                </div>
+
+                <div style="background: var(--card-bg); border-left: 3px solid var(--primary); border-radius: 0 8px 8px 0; padding: 12px 18px; margin-top: 4px; display: flex; gap: 14px; align-items: center;">
+                    <span style="color: var(--primary); font-size: 1.4em;">💡</span>
+                    <p style="font-size: 0.82em; margin: 0;">The Curator never possesses any secret key material — it performs only <strong>public-key aggregation</strong>, a deterministic, auditable operation. Even if compromised, no user's secret key is revealed.</p>
+                </div>
+            </section>
+
+            <section data-sec="regabe">
+                <h2>Algebraic Aggregation & Cross-Terms</h2>
+                <div class="grid-2">
+                    <div class="card accent-blue">
+                        <h3>Aggregation ($Update$)</h3>
+                        <p style="font-size: 0.9em;">User $i$ samples local secret $r_i \leftarrow \mathbb{Z}_p$, publishes $T_i = g^{r_i}$. The curator aggregates purely via multiplication:</p>
+                        <div class="math-box">
+                            $\hat{T} = \prod T_j = g^{\sum r_j}$
+                        </div>
+                        <p style="font-size: 0.9em;">Because MPK incorporates exponents from all users, a single user requires the HSK to mathematically filter out the "cross-terms" belonging to everyone else.</p>
+                    </div>
+
+                    <div class="card accent-purple">
+                        <h3>Slot Isolation ($Decrypt$)</h3>
+                        <p style="font-size: 0.9em;">Curator packages blinding factors $V_{j,i} = A_j^{r_i}$ into $hsk_i$. User $i$ leverages pairing to check and isolate their slot:</p>
+                        <div class="math-box" style="font-size: 0.8em;">
+                            $e(C, h_{N+1-i}) = e(\Lambda_i, g_2) \cdot e(h_i^{r_i}, h_{N+1-i})$
+                        </div>
+                        <p style="font-size: 0.9em;">Once cross-terms are cleanly canceled out, the user proceeds to the Predicate Encoding ($LSSS$) check.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="regabe">
+                <h2>Predicate Encodings ($LSSS$ Policy Checks)</h2>
+                <p>Maps boolean access formulas into matrices over a finite field $\mathbb{Z}_p$. Let $x \in \mathcal{X}$ (attributes) and $y \in \mathcal{Y}$ (policy).</p>
+                
+                <div class="grid-2-1" style="align-items: center;">
+                    <div class="flex-col">
+                        <div class="card accent-blue" style="padding: 15px;">
+                            <ul style="font-size: 0.9em; margin-bottom: 0;">
+                                <li><strong>Ciphertext Encoding ($C_x$):</strong> Mathematical attribute vector.</li>
+                                <li><strong>Key Encoding ($K_y$):</strong> The LSSS access matrix.</li>
+                                <li><strong>Decryption Vector ($d_{x,y}$):</strong> Computable <em>only</em> if predicate $P(x,y)=1$.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card accent-green" style="padding: 15px;">
+                            <h4 style="margin-bottom: 5px; font-size: 1.1em;">The Reconstruction</h4>
+                            <p style="font-size: 0.85em; margin-bottom: 0;">Arranging matrices to isolate shared secret $\alpha$. User computes $M_{x,y} d_{x,y}^\top = e_1^\top$, effectively wiping the blinding factors. If $P(x,y)=0$, $\alpha$ remains perfectly statistically hidden.</p>
+                        </div>
+                    </div>
+
+                    <div class="math-box" style="height: 100%; display: flex; align-items: center; justify-content: center; margin: 0;">
+                        $$ M_{x,y} = \begin{pmatrix} \alpha_y & 0 \\ K_y & C_x \end{pmatrix} $$
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="regabe">
+                <h2>Vector Commitments & Merkle Registration</h2>
+                <p>Achieving $O(\log N)$ registration efficiency and trustless auditing.</p>
+
+                <div class="grid-2">
+                    <div class="card accent-blue">
+                        <h3>The Registration Tree</h3>
+                        <p style="font-size: 0.9em;">Public keys are compressed into a digest via Vector Commitments in pairing group $\mathbb{G}$:</p>
+                        <div class="math-box" style="padding: 10px; font-size: 0.9em;">
+                            $C = \prod_{i \in [N]} h_i^{pk_i}$
+                        </div>
+                        <ul style="font-size: 0.85em; margin-bottom: 0;">
+                            <li>Commitments form leaves of a Merkle Tree.</li>
+                            <li>The <strong>Root Hash</strong> definitively acts as the MPK.</li>
+                            <li>Any user can request $O(\log N)$ sibling hashes to mathematically prove their inclusion without trusting the Curator.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card accent-purple">
+                        <h3>Slotted Merging</h3>
+                        <p style="font-size: 0.9em;">Direct dynamic joining is complex. We implement a "Powers-of-Two" mechanism over slotted capacities.</p>
+                        <div class="pipeline" style="font-size: 0.8em; margin: 10px 0;">
+                            <div class="pipeline-node" style="padding: 5px;">Tree size 8</div>
+                            <div class="pipeline-node" style="padding: 5px;">Tree size 4</div>
+                            <div class="pipeline-node" style="padding: 5px;">Tree 2</div>
+                            <div class="pipeline-node" style="padding: 5px;">Tree 1</div>
+                        </div>
+                        <p style="font-size: 0.85em; color: var(--warning);">When User 16 registers, they fill a new slot of size 1. This triggers a cascading collapse merging trees $1 \to 2 \to 4 \to 8 \to 16$.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="regabe">
+                <h2>Merkle Registration Tree — Visual Structure</h2>
+                <p style="font-size: 0.85em;">The Curator organizes all registered public keys into a binary Merkle tree. The root hash serves as the compact Master Public Key (MPK).</p>
+
+                <div style="display: flex; flex-direction: column; align-items: center; margin-top: 15px;">
+                    <!-- Level 0: Root -->
+                    <div style="display: flex; justify-content: center;">
+                        <div style="background: linear-gradient(135deg, rgba(56,189,248,0.3), rgba(167,139,250,0.3)); border: 2px solid var(--primary); border-radius: 12px; padding: 14px 35px; font-family: var(--font-code); font-size: 1em; font-weight: 700; color: var(--text-main); text-align: center;">
+                            <span style="font-size: 0.75em; color: var(--primary); display: block;">ROOT = MPK</span>
+                            $H(H_{01} \| H_{23})$
+                        </div>
+                    </div>
+                    <!-- Connectors L0 -->
+                    <div style="display: flex; justify-content: center; margin: 3px 0;">
+                        <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.3);"></div>
+                    </div>
+                    <div style="width: 450px; height: 2px; background: rgba(255,255,255,0.2); margin-bottom: 3px;"></div>
+                    <div style="display: flex; justify-content: center; gap: 446px; margin-bottom: 3px;">
+                        <div style="width: 2px; height: 25px; background: rgba(255,255,255,0.3);"></div>
+                        <div style="width: 2px; height: 25px; background: rgba(255,255,255,0.3);"></div>
+                    </div>
+                    <!-- Level 1 -->
+                    <div style="display: flex; justify-content: center; gap: 120px;">
+                        <div style="background: var(--card-bg); border: 1px solid var(--secondary); border-radius: 10px; padding: 10px 24px; font-family: var(--font-code); font-size: 0.85em; color: var(--secondary); text-align: center;">
+                            $H_{01} = H(C_0 \| C_1)$
+                        </div>
+                        <div style="background: var(--card-bg); border: 1px solid var(--secondary); border-radius: 10px; padding: 10px 24px; font-family: var(--font-code); font-size: 0.85em; color: var(--secondary); text-align: center;">
+                            $H_{23} = H(C_2 \| C_3)$
+                        </div>
+                    </div>
+                    <!-- Connectors L1 -->
+                    <div style="display: flex; justify-content: center; gap: 200px; margin: 3px 0;">
+                        <div style="display: flex; gap: 140px;">
+                            <div style="width: 2px; height: 20px; background: rgba(255,255,255,0.2);"></div>
+                            <div style="width: 2px; height: 20px; background: rgba(255,255,255,0.2);"></div>
+                        </div>
+                        <div style="display: flex; gap: 140px;">
+                            <div style="width: 2px; height: 20px; background: rgba(255,255,255,0.2);"></div>
+                            <div style="width: 2px; height: 20px; background: rgba(255,255,255,0.2);"></div>
+                        </div>
+                    </div>
+                    <!-- Level 2: Leaves -->
+                    <div style="display: flex; justify-content: center; gap: 25px;">
+                        <div style="background: rgba(16,185,129,0.15); border: 1px solid var(--success); border-radius: 8px; padding: 10px 20px; font-family: var(--font-code); font-size: 0.8em; color: var(--success); text-align: center;">
+                            $C_0 = h_0^{pk_0}$<br><span style="font-size: 0.85em; color: var(--text-muted);">User 0</span>
+                        </div>
+                        <div style="background: rgba(16,185,129,0.15); border: 1px solid var(--success); border-radius: 8px; padding: 10px 20px; font-family: var(--font-code); font-size: 0.8em; color: var(--success); text-align: center;">
+                            $C_1 = h_1^{pk_1}$<br><span style="font-size: 0.85em; color: var(--text-muted);">User 1</span>
+                        </div>
+                        <div style="background: rgba(16,185,129,0.15); border: 1px solid var(--success); border-radius: 8px; padding: 10px 20px; font-family: var(--font-code); font-size: 0.8em; color: var(--success); text-align: center;">
+                            $C_2 = h_2^{pk_2}$<br><span style="font-size: 0.85em; color: var(--text-muted);">User 2</span>
+                        </div>
+                        <div style="background: rgba(245,158,11,0.15); border: 1px dashed var(--warning); border-radius: 8px; padding: 10px 20px; font-family: var(--font-code); font-size: 0.8em; color: var(--warning); text-align: center;">
+                            $C_3 = h_3^{pk_3}$<br><span style="font-size: 0.85em;">New User</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card accent-blue" style="padding: 12px;">
+                        <p style="font-size: 0.85em; margin: 0;"><strong>Inclusion Proof:</strong> User 2 only needs sibling $C_3$ and hash $H_{01}$ — just $O(\log N)$ elements — to verify their membership against the root MPK.</p>
+                    </div>
+                    <div class="card accent-gold" style="padding: 12px;">
+                        <p style="font-size: 0.85em; margin: 0;"><strong>Dynamic Updates:</strong> When User 3 registers (dashed), only $H_{23}$ and the Root are recomputed. All other branches remain unchanged.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="optimization">
+                <h2>Efficiency Optimization via Prime-Order Groups</h2>
+                <p>Moving from composite subgroups to prime-order vector subspaces (via DPVS) drastically reduces overhead.</p>
+
+                <table class="data-table" style="margin-top: 25px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%;">Metric</th>
+                            <th style="width: 35%;">Composite-Order Group</th>
+                            <th style="width: 35%; color: var(--success);">Prime-Order Vector Space</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Math Basis</strong></td>
+                            <td>$N = p_1 \cdot p_2 \cdot p_3$ (Factoring Hard)</td>
+                            <td>Single Prime $p$ (e.g. BLS12-381)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Isolation Tool</strong></td>
+                            <td>Subgroup $\mathbb{G}_{p1}$ cancels $\mathbb{G}_{p2}$</td>
+                            <td>Orthogonal vector subspaces $\mathbb{V}_1 \perp \mathbb{V}_2$</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security Proof</strong></td>
+                            <td>Subgroup Decision Assumption</td>
+                            <td>Decision Linear ($k$-Lin) Assumption</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ciphertext Size</strong></td>
+                            <td>Large (~1024-bit per element)</td>
+                            <td>Small (~256-bit per element)</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Master Public Key</strong></td>
+                            <td>$O(L^2) \rightarrow$ <strong>$\approx 15 \text{ MB}$</strong></td>
+                            <td>$O(L) \rightarrow$ <strong style="color: var(--success);">$\approx 7.5 \text{ KB}$</strong> (>2000x smaller)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="grid-3" style="margin-top: 20px;">
+                    <div class="card accent-blue" style="padding: 12px; text-align: center;">
+                        <h3 style="justify-content: center; font-size: 1em; margin-bottom: 5px;">2000x Smaller MPK</h3>
+                        <p style="font-size: 0.78em; margin: 0;">From ~15 MB down to ~7.5 KB, enabling mobile and IoT deployment scenarios previously impossible.</p>
+                    </div>
+                    <div class="card accent-purple" style="padding: 12px; text-align: center;">
+                        <h3 style="justify-content: center; font-size: 1em; margin-bottom: 5px;">4x Faster Pairings</h3>
+                        <p style="font-size: 0.78em; margin: 0;">Prime-order pairings on BLS12-381 are ~4x faster than composite-order equivalents at the same security level.</p>
+                    </div>
+                    <div class="card accent-green" style="padding: 12px; text-align: center;">
+                        <h3 style="justify-content: center; font-size: 1em; margin-bottom: 5px;">Standard k-Lin Security</h3>
+                        <p style="font-size: 0.78em; margin: 0;">Security reductions under $k$-Lin are tighter and better understood than composite subgroup decision assumptions.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="optimization">
+                <h2>Kronecker Products & QA-NIZK Proofs</h2>
+                
+                <div class="grid-2" style="margin-top: 15px;">
+                    <div class="card accent-blue">
+                        <h3>QA-NIZK Injection Defense</h3>
+                        <p style="font-size: 0.9em;">Quasi-Adaptive Non-Interactive Zero-Knowledge proofs appended to registered public keys prevent adversaries from inserting malformed components.</p>
+                        <ul style="font-size: 0.85em;">
+                            <li>$Verify(crs, pk_i, \pi_i) == 1$ required before curator aggregation.</li>
+                            <li>Defends against adaptive chosen-key attacks on the MPK structure.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card accent-purple">
+                        <h3>Kronecker Encodings</h3>
+                        <p style="font-size: 0.9em;">LSSS access matrices are mapped onto DPVS basis networks via Kronecker Products ($\otimes$):</p>
+                        <div class="math-box" style="font-size: 0.8em; padding: 10px; overflow: hidden;">
+                            $A \otimes B = \begin{pmatrix} a_{11}B & \dots & a_{1m}B \\ \vdots & \ddots & \vdots \\ a_{n1}B & \dots & a_{nm}B \end{pmatrix}$
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card accent-green" style="margin-top: 15px; padding: 15px; display: flex; gap: 20px; align-items: center;">
+                    <h3 style="margin: 0; min-width: 150px; border-right: 1px solid rgba(255,255,255,0.2); padding-right: 15px;">Full CCA-Security</h3>
+                    <p style="font-size: 0.85em; margin: 0;">By combining QA-NIZK proofs of ciphertext well-formedness with one-time signatures binding the ciphertext to the policy, the system is upgraded from CPA (passive) to <strong>Chosen-Ciphertext Attack (CCA) resilience</strong>, securing the payload against aggressive decryption oracle manipulation.</p>
+                </div>
+            </section>
+
+            <section data-sec="optimization">
+                <h2>Simulation-Based Security Proofs</h2>
+                <p>Proving security in Reg-ABE relies on the <strong>Dual-System Argument</strong>, aggressively curbing entropy leakage over sequential key queries.</p>
+
+                <div class="grid-2">
+                    <div class="card accent-blue">
+                        <h3>IND-Reg-ABE Game</h3>
+                        <ol style="font-size: 0.85em; padding-left: 20px;">
+                            <li>Adversary chooses messages $m_0, m_1$ and challenge policy $y^*$.</li>
+                            <li>Challenger encrypts $m_b$ (random $b$) under $y^*$.</li>
+                            <li>Adversary queries $Register(x_i)$ for any attributes where $P(x_i, y^*) = 0$ (must not satisfy policy).</li>
+                            <li>Adversary guesses $b'$. Advantage must be negligible: $|\Pr[b'=b] - 1/2| \le \epsilon$.</li>
+                        </ol>
+                    </div>
+
+                    <div class="card accent-gold">
+                        <h3>Hybrid Transition (k-Lin)</h3>
+                        <ul style="font-size: 0.85em;">
+                            <li><strong>Game 0:</strong> Real IND-Reg-ABE game.</li>
+                            <li><strong>Game 1:</strong> Replace ciphertext randomness with DPVS blinding.</li>
+                            <li><strong>Game 2:</strong> Apply k-Lin reduction.</li>
+                            <li><strong>Game 3:</strong> Dual-system transition (keys become semi-functional).</li>
+                            <li><strong>Game 4:</strong> Perfect information-theoretic hiding of message payload.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="regfe">
+                <h2>Registered Functional Encryption (Reg-FE)</h2>
+                <p>Standard ABE decryption is strictly binary (all or nothing). Functional Encryption allows a user to evaluate a function $f(x)$ over an encrypted payload $x$, outputting exactly the computed result and <strong>revealing nothing else</strong> about the data.</p>
+                
+                <div class="card accent-blue" style="margin-top: 25px;">
+                    <h3>Registered Inner-Product FE (Reg-IPFE)</h3>
+                    <p style="font-size: 0.9em;">User registers a linear function vector $\vec{y}$. Provider encrypts sensitive data vector $\vec{x}$ (e.g., financial metrics).</p>
+                    <div class="math-box">
+                        $f_{\vec{y}}(\vec{x}) = \langle \vec{x}, \vec{y} \rangle = \sum_{i=1}^n x_i y_i$
+                    </div>
+                    <ul style="font-size: 0.9em; margin-bottom: 0;">
+                        <li><strong>Ciphertext Size:</strong> Weakly compact $O(n \cdot \log L)$ group elements.</li>
+                        <li><strong>Security:</strong> Adaptive IND-security anchored by $k$-Linear assumption in standard model.</li>
+                        <li><strong>Application:</strong> Decentralized statistical processing without central trust.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section data-sec="regfe">
+                <h2>Registered Quadratic FE (Reg-QFE)</h2>
+                <div class="grid-2">
+                    <div class="card accent-blue">
+                        <h3>Quadratic Evaluation</h3>
+                        <p style="font-size: 0.85em;">Allows evaluation of quadratic polynomials (e.g. variances, spatial distance) over blinded arrays.</p>
+                        <p style="font-size: 0.85em;">User registers matrix $F \in \mathbb{Z}_p^{n \times n}$. Ciphertext securely houses $(\vec{x}_1, \vec{x}_2)$. Decryption sequence calculates:</p>
+                        <div class="math-box" style="font-size: 0.9em; padding: 10px;">
+                            $f(\vec{x}_1, \vec{x}_2) = (\vec{x}_1 \otimes \vec{x}_2) F^\top$
+                        </div>
+                    </div>
+
+                    <div class="card accent-purple">
+                        <h3>Pre-Constrained Innovation (PReg-IPFE)</h3>
+                        <p style="font-size: 0.85em;"><strong>The Problem:</strong> Computing quadratic functions directly produces non-linear terms that break the Curator's clean linear aggregation symmetry.</p>
+                        <p style="font-size: 0.85em;"><strong>The Solution:</strong> Separate function definition from user registration. The master matrix defining the function space is embedded directly into the CRS during trusted setup.</p>
+                        <p style="font-size: 0.85em; color: var(--primary);">Curator workload remains purely linear (simple multiplications). Non-linear complexity is enforced dynamically during decryption pairing.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="future">
+                <h2>Open Problems & Roadblocks</h2>
+                <p>As this architecture advances, several highly critical challenges remain to be solved at the frontier of decentralized cryptography.</p>
+
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card accent-red">
+                        <h3 style="color: var(--danger);">Post-Quantum Reg-ABE</h3>
+                        <p style="font-size: 0.85em;">Bilinear pairings on elliptic curves are fundamentally vulnerable to Shor's algorithm. Constructing efficient Reg-ABE from lattice-based assumptions (LWE) without reverting to Garbled Circuits requires novel research into lattice vector commitments.</p>
+                    </div>
+                    
+                    <div class="card accent-gold">
+                        <h3 style="color: var(--warning);">Compactness in Reg-QFE</h3>
+                        <p style="font-size: 0.85em;">Current Reg-QFE suffers from a massive Common Reference String of size $O(n^2 \cdot L^2 \cdot \log L)$. Reducing this CRS to a linear dependency on $n$ and $L$ requires new dual-system algebra techniques.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="future">
+                <h2>Scaling & Accountability Vectors</h2>
+                
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card accent-purple">
+                        <h3>Traitor Tracing</h3>
+                        <p style="font-size: 0.85em;">In Reg-ABE, if a malicious user leaks their locally generated secret key ($sk_i$) or the curator's $hsk_i$ to a third party, it is impossible to identify the source. Integrating mathematical tracking to fingerprint specific registered slots is crucial for enterprise accountability.</p>
+                    </div>
+                    
+                    <div class="card accent-blue">
+                        <h3>Unbounded Scaling without iO</h3>
+                        <p style="font-size: 0.85em;">Current pairing-based implementations enforce a rigid maximum capacity $L$ (slots). Removing this limit currently relies on Indistinguishability Obfuscation (iO), which provides strong theory but limited practical applicability. Dynamic infinite scaling via black-box math remains elusive.</p>
+                    </div>
+                </div>
+                
+                <div class="grid-2" style="margin-top: 15px;">
+                    <div class="card accent-green" style="padding: 15px;">
+                        <h3 style="color: var(--success);">Next Plan: Software Benchmarking</h3>
+                        <p style="font-size: 0.85em; margin-bottom: 0;">Writing prime-order Reg-IPFE logic in C/C++ (RELIC/PBC libraries) to record actual setup, registration, and decryption latencies under realistic cloud workloads.</p>
+                    </div>
+                    <div class="card accent-gold" style="padding: 15px;">
+                        <h3 style="color: var(--warning);">Lattice-Based Reg-ABE</h3>
+                        <p style="font-size: 0.85em; margin-bottom: 0;">Investigating efficient Reg-ABE from LWE assumptions without falling back on impractical Garbled Circuits. Requires novel research into lattice vector commitments.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="future">
+                <h2>Conclusion & Key Contributions</h2>
+
+                <div class="grid-2" style="margin-top: 15px;">
+                    <div class="flex-col" style="gap: 12px;">
+                        <div class="card accent-blue" style="padding: 12px;">
+                            <h3 style="font-size: 1em; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 12px;">1</span> Escrow-Free Architecture</h3>
+                            <p style="font-size: 0.8em; margin: 0;">Replaced the centralized PKG with a transparent, non-privileged <strong>Key Curator</strong> — eliminating the single point of cryptographic failure that plagued ABE for two decades.</p>
+                        </div>
+                        <div class="card accent-purple" style="padding: 12px;">
+                            <h3 style="font-size: 1em; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 12px; background: var(--secondary);">2</span> Practical Efficiency</h3>
+                            <p style="font-size: 0.8em; margin: 0;">Transitioned from composite-order to prime-order groups via DPVS, achieving <strong>>2000x reduction</strong> in MPK size and ~4x faster pairing operations on BLS12-381 curves.</p>
+                        </div>
+                        <div class="card accent-green" style="padding: 12px;">
+                            <h3 style="font-size: 1em; margin-bottom: 6px;"><span class="num-circle" style="width: 24px; height: 24px; font-size: 12px; background: var(--success);">3</span> Extended to Functional Encryption</h3>
+                            <p style="font-size: 0.8em; margin: 0;">Generalized Reg-ABE to support <strong>inner-product (Reg-IPFE)</strong> and <strong>quadratic (Reg-QFE)</strong> computations over encrypted data, all without central trust.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex-col" style="gap: 12px;">
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                            <h4 style="color: var(--primary); font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Core Bibliography</h4>
+                            <ul style="font-size: 0.68em; color: var(--text-muted); font-family: var(--font-code); list-style-type: none; padding-left: 0; margin-bottom: 0;">
+                                <li style="margin-bottom: 6px;">[1] Hohenberger, Lu, Waters & Wu. Registered Attribute-Based Encryption. EUROCRYPT 2023.</li>
+                                <li style="margin-bottom: 6px;">[2] Rouselakis & Tomida. Towards Practical Registered ABE. ePrint 2026/414.</li>
+                                <li style="margin-bottom: 6px;">[3] Zhu et al. Registered Functional Encryptions from Pairings. ePrint 2024/327.</li>
+                                <li>[4] Lewko. Simulating Composite Order in Prime Order. EUROCRYPT 2012.</li>
+                            </ul>
+                        </div>
+                        <div class="card accent-gold" style="padding: 12px;">
+                            <h3 style="font-size: 0.95em; margin-bottom: 5px; color: var(--warning);">Next Steps</h3>
+                            <p style="font-size: 0.78em; margin: 0;">Software benchmarking of Reg-IPFE in C/C++ (RELIC library) and investigating post-quantum lattice-based constructions.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Thank You Slide -->
+            <section data-sec="future">
+                <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative;">
+                    <!-- Decorative glowing circles -->
+                    <div style="position: absolute; top: 10%; left: 15%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+                    <div style="position: absolute; bottom: 15%; right: 10%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(167,139,250,0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+
+                    <p style="font-size: 0.85em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 10px; font-weight: 600;">Pairing-Based Registered ABE</p>
+
+                    <h1 style="font-family: 'Rajdhani', sans-serif; font-size: 6em; font-weight: 700; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--success) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1;">
+                        Thank You
+                    </h1>
+
+                    <div style="width: 150px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary)); margin: 25px 0; border-radius: 2px;"></div>
+
+                    <p style="font-size: 1em; color: var(--text-muted); margin-bottom: 30px; max-width: 600px; line-height: 1.5;">
+                        Questions & Discussion
+                    </p>
+
+                    <div style="display: flex; gap: 25px; align-items: center;">
+                        <div style="text-align: center;">
+                            <p style="font-size: 0.85em; color: var(--text-main); margin: 0; font-weight: 600;">Golla Meghanandh Manvith Prabhash</p>
+                            <p style="font-size: 0.75em; color: var(--primary); margin: 3px 0 0 0; font-family: var(--font-code);">22CS30027</p>
+                        </div>
+                        <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.15);"></div>
+                        <div style="text-align: center;">
+                            <p style="font-size: 0.8em; color: var(--text-muted); margin: 0;">Supervisor</p>
+                            <p style="font-size: 0.85em; color: var(--text-main); margin: 3px 0 0 0; font-weight: 600;">Dr. Somindu Chaya Ramanna</p>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 0.7em; color: var(--text-muted); margin-top: 35px; letter-spacing: 1px;">
+                        Indian Institute of Technology Kharagpur &bull; Department of CSE &bull; Spring 2025-26
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        // Initialize Reveal.js
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: false,
+            hash: true,
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            slideNumber: 'c/t',
+            width: 1200,
+            height: 700,
+            margin: 0.05,
+            disableLayout: false
+        });
+
+        // Initialize KaTeX Auto-Render
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError: false
+            });
+        });
+
+        // Interactive Navbar Logic
+        Reveal.on('slidechanged', event => {
+            const currentSection = event.currentSlide.getAttribute('data-sec');
+            
+            // Remove active from all nav items
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Add active to current
+            if (currentSection) {
+                const activeNav = document.querySelector('.nav-item[data-target="' + currentSection + '"]');
+                if (activeNav) {
+                    activeNav.classList.add('active');
+                }
+            }
+        });
+
+        // Set initial active state
+        Reveal.on('ready', event => {
+            const currentSection = event.currentSlide.getAttribute('data-sec');
+            if (currentSection) {
+                const activeNav = document.querySelector('.nav-item[data-target="' + currentSection + '"]');
+                if(activeNav) activeNav.classList.add('active');
+            }
+        });
+        
+        // Make navbar clickable
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                const targetSlide = document.querySelector('section[data-sec="' + target + '"]');
+                if (targetSlide) {
+                    // Find index of slide
+                    const slides = Array.from(document.querySelectorAll('.reveal .slides > section'));
+                    const index = slides.indexOf(targetSlide);
+                    if (index !== -1) {
+                        Reveal.slide(index);
+                    }
+                }
+            });
+        });
+
+        // Download PDF button
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            // Use browser's native print-to-PDF
+            window.print();
+        });
+    </script>
+</body>
+</html>
