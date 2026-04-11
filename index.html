@@ -441,53 +441,70 @@
             .data-table th { background: #eee !important; color: #000 !important; }
         }
         /* -------------------------------------------
-        MOBILE RESPONSIVENESS
-        ------------------------------------------- */
-        @media (max-width: 768px) {
-            /* 1. Adjust the main navbar container */
-            #presentation-navbar {
-                padding: 0 15px; /* Reduce side padding */
-                gap: 15px;       /* Space between brand and menu */
-            }
-            
-            /* 2. Protect the logo/brand from squishing */
-            .nav-brand {
-                font-size: 16px; 
-                flex-shrink: 0;  
-            }
+   MOBILE RESPONSIVENESS
+------------------------------------------- */
+@media (max-width: 768px) {
+    /* 1. Navbar Container Fixes */
+    #presentation-navbar {
+        padding: 0 15px; 
+        gap: 15px;       
+        width: 100vw;
+        max-width: 100%;
+    }
+    
+    .nav-brand {
+        font-size: 15px; 
+        flex-shrink: 0; /* Protects the logo from squishing */
+        white-space: nowrap;
+    }
 
-            /* 3. Make the menu horizontally scrollable */
-            .nav-menu {
-                overflow-x: auto;        /* Enable swiping */
-                overflow-y: hidden;
-                flex-wrap: nowrap;       /* Force single line */
-                gap: 20px;               /* Tighter spacing between links */
-                padding-right: 20px;     /* Breathing room at the end of scroll */
-                justify-content: flex-start;
-                
-                /* Hide ugly scrollbars for a clean, app-like look */
-                -ms-overflow-style: none;  /* IE and Edge */
-                scrollbar-width: none;     /* Firefox */
-            }
-            
-            .nav-menu::-webkit-scrollbar {
-                display: none; /* Chrome, Safari and Opera */
-            }
+    /* 2. Menu Scrolling Fixes */
+    .nav-menu {
+        flex: 1; /* Takes up exactly the remaining space */
+        overflow-x: auto; /* Enables swiping */
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        gap: 20px;
+        padding-right: 15px;
+        justify-content: flex-start;
+        
+        /* Hide scrollbars for a clean look */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .nav-menu::-webkit-scrollbar {
+        display: none;
+    }
 
-            /* 4. Ensure text doesn't wrap on small screens */
-            .nav-item {
-                font-size: 12px;
-                white-space: nowrap; 
-            }
+    /* 3. Link Item Fixes */
+    .nav-item {
+        font-size: 12px;
+        white-space: nowrap; /* Forces text to stay on one line */
+        flex-shrink: 0; /* CRITICAL: Forces items to trigger scroll instead of squishing */
+    }
 
-            /* 5. Scale down the floating action buttons slightly so they don't block content */
-            .floating-actions {
-                bottom: 15px;
-                right: 15px;
-                transform: scale(0.85);
-                transform-origin: bottom right;
-            }
-        }
+    /* 4. Fix Squished Slide Content */
+    .grid-2, .grid-3, .grid-4, .grid-2-1, .grid-1-2 {
+        grid-template-columns: 1fr !important; /* Stacks all cards vertically on phones */
+        gap: 15px;
+    }
+
+    /* 5. General Mobile Polish */
+    .reveal .slides section {
+        padding: 80px 15px 20px 15px !important; /* Adds breathing room on phone screens */
+    }
+    
+    .reveal h1 { font-size: 2.2em !important; }
+    .reveal h2 { font-size: 1.4em !important; }
+
+    .floating-actions {
+        bottom: 15px;
+        right: 15px;
+        transform: scale(0.85);
+        transform-origin: bottom right;
+    }
+}
     </style>
 </head>
 <body>
