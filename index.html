@@ -337,11 +337,11 @@
         }
 
         .card h3 { font-size: 1.2em; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-        .card.accent-blue { border-left: 4px solid var(--primary); background: rgba(56, 189, 248, 0.08); }
-        .card.accent-purple { border-left: 4px solid var(--secondary); background: rgba(167, 139, 250, 0.08); }
-        .card.accent-green { border-left: 4px solid var(--success); background: rgba(16, 185, 129, 0.08); }
+        .card.accent-blue { border-left: 4px solid var(--primary); background: rgba(56, 189, 248, 0.1); }
+        .card.accent-purple { border-left: 4px solid var(--secondary); background: rgba(167, 139, 250, 0.1); }
+        .card.accent-green { border-left: 4px solid var(--success); background: rgba(16, 185, 129, 0.1); }
         .card.accent-red { border-left: 4px solid var(--danger); background: rgba(239, 68, 68, 0.1); }
-        .card.accent-gold { border-left: 4px solid var(--warning); background: rgba(245, 158, 11, 0.08); }
+        .card.accent-gold { border-left: 4px solid var(--warning); background: rgba(245, 158, 11, 0.1); }
 
         .math-box {
             background: rgba(30, 41, 59, 0.85);
@@ -747,8 +747,8 @@
             <section data-sec="primitives">
                 <h2>Asymmetric Pairings</h2>
                 <p style="font-size: 0.85em;">A pairing is a computable map $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ bridging elements from two prime-order groups. The choice of pairing type profoundly affects efficiency and security.</p>
-                <div class="grid-3" style="margin-top: 15px;">
-                    <div class="card accent-purple" style="padding: 15px;">
+                <div class="grid-3" style="margin-top: px; margin-bottom: 40px;">
+                    <div class="card accent-purple" style="padding: 5px 12px;">
                         <h3 style="font-size: 1.05em; color: var(--secondary);">Type II Pairing</h3>
                         <p style="font-size: 0.8em;">An efficiently computable homomorphism exists <strong>in one direction</strong>:</p>
                         <div class="math-box" style="font-size: 0.8em; padding: 8px; margin: 8px 0;">
@@ -760,7 +760,7 @@
                             <li><strong>Drawback:</strong> The homomorphism leaks structural info, limiting proof strategies.</li>
                         </ul>
                     </div>
-                    <div class="card accent-blue" style="padding: 15px;">
+                    <div class="card accent-blue" style="padding: 5px 12px;">
                         <h3 style="font-size: 1.05em;">Type III Pairing</h3>
                         <p style="font-size: 0.8em;"><strong>No efficient homomorphism</strong> exists between $\mathbb{G}_1$ and $\mathbb{G}_2$ in either direction.</p>
                         <div class="math-box" style="font-size: 0.8em; padding: 8px; margin: 8px 0;">
@@ -770,9 +770,10 @@
                             <li><strong>Bilinearity:</strong> $e(u^a, v^b) = e(u,v)^{ab}$</li>
                             <li><strong>Non-degeneracy:</strong> $e(g_1, g_2) \neq 1_{\mathbb{G}_T}$</li>
                             <li><strong>Computability:</strong> Poly-time for all valid inputs.</li>
+                            <li><strong>Computability:</strong> $e(g^a, g^b) = e(g,g)^{ab}$ — enables hidden multiplicative checks without revealing exponents</li>
                         </ul>
                     </div>
-                    <div class="card accent-gold" style="padding: 15px;">
+                    <div class="card accent-gold" style="padding: 5px 12px;">
                         <h3 style="font-size: 1.05em; color: var(--warning);">Why Type III?</h3>
                         <p style="font-size: 0.8em;">The absence of any connecting homomorphism provides the strongest security guarantees:</p>
                         <ul style="font-size: 0.78em; margin-bottom: 0;">
@@ -783,16 +784,13 @@
                         </ul>
                     </div>
                 </div>
-                <div class="math-box" style="margin-top: 15px; font-size: 0.9em;">
-                    $e(g^a, g^b) = e(g,g)^{ab}$ — enables hidden multiplicative checks without revealing exponents
-                </div>
             </section>
 
             <section data-sec="primitives">
                 <h2>Dual Pairing Vector Spaces (DPVS)</h2>
                 <p>To simulate composite subgroup cancellations in highly efficient prime-order spaces, we shift dimensions: <strong>replacing numbers with vectors</strong>.</p>
                 <div class="grid-2">
-                    <div class="card accent-blue">
+                    <div class="card accent-blue" style="padding: 5px 12px;">
                         <h3>Orthogonal Bases</h3>
                         <p style="font-size: 0.9em;">Setup algorithm generates two strictly orthogonal bases:</p>
                         <div class="math-box" style="font-size: 0.85em; text-align: left; padding-left: 20px;">
@@ -804,7 +802,7 @@
                             $e(b_i, b_j^*) = \begin{cases} g_T^\psi & \text{if } i = j \\ 1 & \text{if } i \neq j \end{cases}$
                         </div>
                     </div>
-                    <div class="card accent-purple">
+                    <div class="card accent-purple" style="padding: 5px 12px;">
                         <h3>Architectural Roles</h3>
                         <ul style="font-size: 0.9em;">
                             <li><strong>Master Public Key & Ciphertexts</strong> live in the span of $\mathbb{B}$ (in $\mathbb{G}_1$).</li>
@@ -828,8 +826,14 @@
                             <li><strong>Share Generation:</strong> Multiplication $M \cdot \vec{v}$ yields the shares.</li>
                             <li><strong>Reconstruction:</strong> If attributes satisfy the structure, user derives constants $c_i$ to solve $\sum c_i(M_i \cdot \vec{v}) = s$.</li>
                         </ul>
-                        <div class="card accent-green" style="margin-top: 15px; padding: 10px; border-radius: 6px;">
-                            <strong>Non-Monotone Span Programs:</strong> LSSS mathematically represents NOT-gates via orthogonal vectors, natively supporting exclusionary logic (e.g., <code>Director AND NOT Contractor</code>).
+                        <div style="margin-top: 20px; background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(16,185,129,0.02) 100%); border: 1px solid rgba(16,185,129,0.3); border-left: 4px solid var(--success); border-radius: 8px; padding: 12px 10px;">
+                            <h4 style="margin: 0 0 8px 0; color: var(--success); font-size: 0.95em; display: flex; align-items: center; gap: 8px; font-family: var(--font-main); letter-spacing: 0.5px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                Non-Monotone Span Programs
+                            </h4>
+                            <p style="margin: 0; font-size: 0.85em; line-height: 1.6; color: var(--text-muted); font-family: var(--font-main);">
+                                LSSS mathematically represents NOT-gates via orthogonal vectors, natively supporting exclusionary logic <br>(e.g., <code style="color: var(--primary); background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; border: 1px solid rgba(56,189,248,0.2);">Director AND NOT Contractor</code>).
+                            </p>
                         </div>
                     </div>
                     <div class="card" style="background: rgba(0,0,0,0.5); padding: 15px; text-align: center;">
@@ -952,7 +956,7 @@
                         </div>
                     </div>
 
-                    <div style="background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(17,26,46,0.6) 100%); padding: 25px; text-align: center; border-radius: 12px; border: 1px solid rgba(56,189,248,0.2); display: flex; flex-direction: column; justify-content: center;">
+                    <div style="background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(17,26,46,0.6) 100%); padding: 15px; text-align: center; border-radius: 12px; border: 1px solid rgba(56,189,248,0.2); display: flex; flex-direction: column; justify-content: center;">
                         <h4 style="font-size: 0.9em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 20px 0;">Composite Matrix</h4>
                         <div class="math-box-glow" style="font-size: 1.15em; margin: 0;">
                             $$ M_{x,y} = \begin{pmatrix} \alpha_y & 0 \\ K_y & C_x \end{pmatrix} $$
@@ -1085,7 +1089,7 @@
                 <h2>Efficiency Optimization via Prime-Order Groups</h2>
                 <p>Moving from composite subgroups to prime-order vector subspaces (via DPVS) drastically reduces overhead.</p>
 
-                <table class="data-table" style="margin-top: 25px;">
+                <table class="data-table" style="margin-top: 15px;">
                     <thead>
                         <tr>
                             <th style="width: 30%;">Metric</th>
@@ -1122,7 +1126,7 @@
                     </tbody>
                 </table>
 
-                <div class="grid-3" style="margin-top: 20px;">
+                <div class="grid-3" style="margin-top: 12px;">
                     <div class="card accent-blue" style="padding: 12px; text-align: center;">
                         <h3 style="justify-content: center; font-size: 1em; margin-bottom: 5px;">2000x Smaller MPK</h3>
                         <p style="font-size: 0.78em; margin: 0;">From ~15 MB down to ~7.5 KB, enabling mobile and IoT deployment scenarios previously impossible.</p>
@@ -1282,7 +1286,7 @@
                 
                 <div class="grid-2" style="margin-top: 15px;">
                     <div class="card accent-green" style="padding: 15px;">
-                        <h3 style="color: var(--success);">Next Plan: Software Benchmarking</h3>
+                        <h3 style="color: var(--success);">Software Benchmarking</h3>
                         <p style="font-size: 0.85em; margin-bottom: 0;">Writing prime-order Reg-IPFE logic in C/C++ (RELIC/PBC libraries) to record actual setup, registration, and decryption latencies under realistic cloud workloads.</p>
                     </div>
                     <div class="card accent-gold" style="padding: 15px;">
