@@ -432,6 +432,30 @@
         .algo-card p { font-size: 0.78em; margin: 0; line-height: 1.5; }
 
         @media print {
+    /* Force background colors/gradients to show up */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Fix the "Thank You" Heading */
+    .reveal h1 {
+        background: none !important;
+        -webkit-background-clip: initial !important;
+        background-clip: initial !important;
+        -webkit-text-fill-color: #38BDF8 !important; /* Forces solid blue */
+        color: #38BDF8 !important;
+        text-shadow: none !important;
+    }
+
+    /* Ensure the colorful divider line remains visible */
+    div[style*="height: 4px"] {
+        background: #38BDF8 !important;
+        border: 1px solid #38BDF8 !important;
+    }
+}
+
+        @media print {
             body { background: #fff !important; color: #000 !important; }
             #presentation-navbar, .floating-actions { display: none !important; }
             .reveal .slides section { page-break-after: always !important; display: block !important; opacity: 1 !important; visibility: visible !important; color: #000 !important; padding: 20px !important; }
@@ -514,7 +538,7 @@
         </div>
         <div class="nav-menu">
             <div class="nav-item" data-target="btp1">BTP-I Recap</div>
-            <div class="nav-item active" data-target="intro">Background</div>
+            <div class="nav-item" data-target="intro">Background</div>
             <div class="nav-item" data-target="primitives">Primitives</div>
             <div class="nav-item" data-target="regabe">Reg-ABE</div>
             <div class="nav-item" data-target="optimization">Optimization</div>
@@ -1509,6 +1533,9 @@
                     <h1 style="font-family: 'Rajdhani', sans-serif; font-size: 6em; font-weight: 700; margin: 0; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--success) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1;">
                         Thank You
                     </h1>
+                    <!-- <h1 style="font-family: 'Rajdhani', sans-serif; font-size: 6em; font-weight: 700; margin: 0; color: #F8FAFC; line-height: 1.1;">
+                        Thank You
+                    </h1> -->
 
                     <div style="width: 150px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary)); margin: 25px 0; border-radius: 2px;"></div>
 
