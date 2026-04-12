@@ -1064,48 +1064,6 @@
                 </div>
             </section>
 
-            <section data-sec="regabe">
-                <h2 style="margin-bottom: 5px;">Merging Keys & Filtering Noise</h2>
-                <p style="font-size: 0.85em; margin-bottom: 25px; color: var(--text-muted);">A high-level view of how the Curator combines keys, and how pairings filter out the resulting noise.</p>
-
-                <div class="grid-2" style="align-items: stretch; gap: 30px;">
-                    <div class="card accent-blue" style="display: flex; flex-direction: column; padding: 20px;">
-                        <h3 style="font-size: 1.1em; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                            Step 1: Aggregate
-                        </h3>
-                        <p style="font-size: 0.85em; line-height: 1.5; margin-bottom: 10px;">User $i$ samples a local secret $r_i \leftarrow \mathbb{Z}_p$ and publishes $T_i = g^{r_i}$. The Curator aggregates these purely via multiplication:</p>
-
-                        <div class="math-box" style="margin: 15px 0; padding: 15px; font-size: 1.15em;">
-                            $\hat{T} = \prod T_j = g^{\sum r_j}$
-                        </div>
-
-                        <div style="margin-top: auto; background: rgba(239, 68, 68, 0.08); border-left: 3px solid var(--danger); padding: 12px 15px; border-radius: 4px;">
-                            <p style="font-size: 0.8em; margin: 0; color: var(--text-main); line-height: 1.5;">
-                                <strong style="color: var(--danger);">The Challenge:</strong> Because the global Master Public Key incorporates exponents from all users, it generates cryptographic interference known as <strong>cross-terms</strong>.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="card accent-purple" style="display: flex; flex-direction: column; padding: 20px;">
-                        <h3 style="font-size: 1.1em; color: var(--secondary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                            Step 2: Decrypt
-                        </h3>
-                        <p style="font-size: 0.85em; line-height: 1.5; margin-bottom: 10px;">To decrypt, a user must filter out everyone else's noise. The Curator provides blinding factors $V_{j,i} = A_j^{r_i}$ inside the Helper Secret Key ($hsk_i$).</p>
-
-                        <div class="math-box-glow" style="margin: 15px 0; padding: 15px; border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.05); color: var(--secondary);">
-                            $e(C, h_{N+1-i}) = e(\Lambda_i, g_2) \cdot e(h_i^{r_i}, h_{N+1-i})$
-                        </div>
-
-                        <div style="margin-top: auto; background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--success); padding: 12px 15px; border-radius: 4px;">
-                            <p style="font-size: 0.8em; margin: 0; color: var(--text-main); line-height: 1.5;">
-                                <strong style="color: var(--success);">The Solution:</strong> The bilinear pairing $e(\cdot, \cdot)$ acts as a mathematical filter, elegantly canceling out the cross-terms to isolate the user's specific slot.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <section data-sec="regabe">
                 <h2>Vector Commitments & Merkle Registration</h2>
@@ -1198,6 +1156,49 @@
                     </div>
                     <div class="card accent-gold" style="padding: 12px;">
                         <p style="font-size: 0.85em; margin: 0;"><strong>Dynamic Updates:</strong> When User 3 registers (dashed), only $H_{23}$ and the Root are recomputed. All other branches remain unchanged.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="regabe">
+                <h2 style="margin-bottom: 5px;">Merging Keys & Filtering Noise</h2>
+                <p style="font-size: 0.85em; margin-bottom: 25px; color: var(--text-muted);">A high-level view of how the Curator combines keys, and how pairings filter out the resulting noise.</p>
+
+                <div class="grid-2" style="align-items: stretch; gap: 30px;">
+                    <div class="card accent-blue" style="display: flex; flex-direction: column; padding: 20px;">
+                        <h3 style="font-size: 1.1em; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            Step 1: Aggregate
+                        </h3>
+                        <p style="font-size: 0.85em; line-height: 1.5; margin-bottom: 10px;">User $i$ samples a local secret $r_i \leftarrow \mathbb{Z}_p$ and publishes $T_i = g^{r_i}$. The Curator aggregates these purely via multiplication:</p>
+
+                        <div class="math-box" style="margin: 15px 0; padding: 15px; font-size: 1.15em;">
+                            $\hat{T} = \prod T_j = g^{\sum r_j}$
+                        </div>
+
+                        <div style="margin-top: auto; background: rgba(239, 68, 68, 0.08); border-left: 3px solid var(--danger); padding: 12px 15px; border-radius: 4px;">
+                            <p style="font-size: 0.8em; margin: 0; color: var(--text-main); line-height: 1.5;">
+                                <strong style="color: var(--danger);">The Challenge:</strong> Because the global Master Public Key incorporates exponents from all users, it generates cryptographic interference known as <strong>cross-terms</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card accent-purple" style="display: flex; flex-direction: column; padding: 20px;">
+                        <h3 style="font-size: 1.1em; color: var(--secondary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                            Step 2: Decrypt
+                        </h3>
+                        <p style="font-size: 0.85em; line-height: 1.5; margin-bottom: 10px;">To decrypt, a user must filter out everyone else's noise. The Curator provides blinding factors $V_{j,i} = A_j^{r_i}$ inside the Helper Secret Key ($hsk_i$).</p>
+
+                        <div class="math-box-glow" style="margin: 15px 0; padding: 15px; border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.05); color: var(--secondary);">
+                            $e(C, h_{N+1-i}) = e(\Lambda_i, g_2) \cdot e(h_i^{r_i}, h_{N+1-i})$
+                        </div>
+
+                        <div style="margin-top: auto; background: rgba(16, 185, 129, 0.08); border-left: 3px solid var(--success); padding: 12px 15px; border-radius: 4px;">
+                            <p style="font-size: 0.8em; margin: 0; color: var(--text-main); line-height: 1.5;">
+                                <strong style="color: var(--success);">The Solution:</strong> The bilinear pairing $e(\cdot, \cdot)$ acts as a mathematical filter, elegantly canceling out the cross-terms to isolate the user's specific slot.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
