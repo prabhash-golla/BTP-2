@@ -707,76 +707,54 @@
 
             <section data-sec="btp1">
                 <h2>Practical Limits of Garbled Cryptography</h2>
-                <p style="font-size: 0.85em;">Despite symmetric-key and arity optimizations, our BTP-I analysis proved that non-black-box CDH constructions are fundamentally disqualified from real-world dynamic network scenarios.</p>
+                <p style="font-size: 0.9em; margin-bottom: 25px;">Despite symmetric-key and arity optimizations, our BTP-I analysis proved that non-black-box CDH constructions are fundamentally disqualified from real-world, dynamic network scenarios.</p>
 
-                <div class="grid-2" style="margin-top: 10px; align-items: start;">
-                    <table class="data-table" style="margin: 0;">
-                        <thead>
-                            <tr>
-                                <th style="width: 35%;">Operation</th>
-                                <th style="width: 25%;">Native Cost</th>
-                                <th style="width: 40%;">Garbled Circuit Cost</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>EC Scalar Mult.</strong></td>
-                                <td>$\approx 1$ group op</td>
-                                <td style="color: var(--danger);"><strong>$10^6 - 10^9$ gates</strong></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Field Multiplication</strong></td>
-                                <td>$\approx 1$ field op</td>
-                                <td style="color: var(--danger);">Thousands of gates</td>
-                            </tr>
-                            <tr>
-                                <td><strong>AES-128 (Ours)</strong></td>
-                                <td>HW Accelerated</td>
-                                <td>3,000 - 5,000 gates</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="grid-2" style="align-items: stretch; gap: 35px;">
+                    <div class="flex-col" style="gap: 20px;">
+                        <div style="background: transparent;">
+                            <table class="data-table" style="margin: 0; font-size: 0.85em; border-top: 2px solid var(--text-muted);">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 12px; width: 40%;">Cryptographic Operation</th>
+                                        <th style="padding: 12px; width: 30%;">Native Cost</th>
+                                        <th style="padding: 12px; width: 30%;">Garbled Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 12px;"><strong>EC Scalar Mult.</strong></td>
+                                        <td style="padding: 12px;">$\approx 1$ group op</td>
+                                        <td style="color: var(--danger); padding: 12px; font-weight: 700;">$10^6 - 10^9$ gates</td>
+                                    </tr>
+                                    <tr class="highlight-row">
+                                        <td style="padding: 12px;"><strong>Field Multiplication</strong></td>
+                                        <td style="padding: 12px;">$\approx 1$ field op</td>
+                                        <td style="color: var(--warning); padding: 12px; font-weight: 700;">Thousands of gates</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; border-bottom: none;"><strong>AES-128 (Ours)</strong></td>
+                                        <td style="padding: 12px; border-bottom: none;">HW Accelerated</td>
+                                        <td style="color: var(--success); padding: 12px; font-weight: 700; border-bottom: none;">3,000 - 5,000 gates</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <div class="card" style="padding: 15px; background: rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.1);">
-                        <h4 style="font-size: 0.9em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Blow-up Factor Visualization</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <div>
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 3px;"><span style="color: var(--text-muted);">EC Scalar Mult.</span><span style="color: var(--danger); font-weight: 700;">~10⁹× blow-up</span></div>
-                                <div style="height: 18px; background: rgba(255,255,255,0.05); border-radius: 9px; overflow: hidden; position: relative;">
-                                    <div style="height: 100%; width: 98%; background: linear-gradient(90deg, #EF4444, #DC2626); border-radius: 9px; animation: barGrow 1.5s ease-out;"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 3px;"><span style="color: var(--text-muted);">Field Multiplication</span><span style="color: var(--warning); font-weight: 700;">~10³× blow-up</span></div>
-                                <div style="height: 18px; background: rgba(255,255,255,0.05); border-radius: 9px; overflow: hidden;">
-                                    <div style="height: 100%; width: 45%; background: linear-gradient(90deg, #F59E0B, #D97706); border-radius: 9px; animation: barGrow 1.8s ease-out;"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75em; margin-bottom: 3px;"><span style="color: var(--text-muted);">AES-128 (Optimized)</span><span style="color: var(--success); font-weight: 700;">~4×10³ gates</span></div>
-                                <div style="height: 18px; background: rgba(255,255,255,0.05); border-radius: 9px; overflow: hidden;">
-                                    <div style="height: 100%; width: 12%; background: linear-gradient(90deg, #10B981, #059669); border-radius: 9px; animation: barGrow 2s ease-out;"></div>
-                                </div>
-                            </div>
+                        <div class="card accent-warning" style="margin: 0; padding: 20px;">
+                            <h4 style="font-size: 1.1em; margin: 0 0 10px 0; color: var(--warning);">The Bandwidth Bottleneck</h4>
+                            <p style="font-size: 0.85em; margin: 0; line-height: 1.5;">A single encrypted message forces the transmission of $10^6$+ garbled gate entries, instantly saturating network limits and paralyzing mobile or IoT environments.</p>
                         </div>
                     </div>
-                </div>
 
-                <div class="card accent-red" style="margin-top: 12px; text-align: center; padding: 12px;">
-                    <strong>Ultimate Conclusion of BTP-I:</strong> Ciphertexts balloon to multi-megabyte sizes per transmission. We must move away from boolean circuits and return to native algebraic "black-box" operations.
-                </div>
-
-                <div class="grid-2" style="margin-top: 12px;">
-                    <div class="card" style="padding: 12px; border-left: 3px solid var(--warning); display: flex; gap: 12px; align-items: center;">
-                        <div>
-                            <h4 style="font-size: 0.9em; margin: 0 0 4px 0; color: var(--warning);">Bandwidth Bottleneck</h4>
-                            <p style="font-size: 0.75em; margin: 0;">A single encrypted message requires transmitting $10^6$+ garbled gate entries — impractical for mobile and IoT devices.</p>
+                    <div class="flex-col" style="gap: 20px; justify-content: center;">
+                        <div class="card accent-red" style="margin: 0; padding: 20px; background: rgba(239, 68, 68, 0.05);">
+                            <h4 style="font-size: 1.1em; margin: 0 0 10px 0; color: var(--danger);">BTP-I Conclusion</h4>
+                            <p style="font-size: 0.85em; margin: 0; line-height: 1.5;">Ciphertext overhead triggers massive multi-megabyte payload explosions per transmission. We must abandon boolean circuit simulations and return to native algebraic "black-box" operations.</p>
                         </div>
-                    </div>
-                    <div class="card" style="padding: 12px; border-left: 3px solid var(--primary); display: flex; gap: 12px; align-items: center;">
-                        <div>
-                            <h4 style="font-size: 0.9em; margin: 0 0 4px 0; color: var(--primary);">The Pivot to Pairings</h4>
-                            <p style="font-size: 0.75em; margin: 0;">Bilinear pairings perform equivalent cryptographic checks with native group operations — no circuit compilation needed.</p>
+
+                        <div class="card accent-blue" style="margin: 0; padding: 20px;">
+                            <h4 style="font-size: 1.1em; margin: 0 0 10px 0; color: var(--primary);">The Pivot to Pairings</h4>
+                            <p style="font-size: 0.85em; margin: 0; line-height: 1.5;">Bilinear pairings resolve this by performing equivalent cryptographic access checks using compact, native group operations—completely eliminating the need for circuit compilation.</p>
                         </div>
                     </div>
                 </div>
@@ -801,7 +779,7 @@
                         <h3>$k$- Linear ($k$- Lin) Assumption</h3>
                         <p style="font-size: 0.9em;">Anchors modern prime-order cryptography. Generalizes DDH ($k=1$) and DLIN ($k=2$).</p>
                         <ul style="font-size: 0.85em;">
-                            <li>Given vectors in an affine subspace of dimension $k$.</li>
+                            <li>Given vectors in an affine subspace of dimension $k$</li>
                             <li>Computationally intractable to determine if a challenge vector belongs to that specific subspace or is uniform.</li>
                             <li>Allows for 256-bit parameter sizes.</li>
                         </ul>
@@ -814,7 +792,7 @@
                 <p style="font-size: 0.85em;">A pairing is a computable map $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$ bridging elements from two prime-order groups. The choice of pairing type profoundly affects efficiency and security.</p>
                 <div class="grid-3" style="margin-top: px; margin-bottom: 40px;">
                     <div class="card accent-purple" style="padding: 5px 12px;">
-                        <h3 style="font-size: 1.05em; color: var(--secondary);">Type II Pairing</h3>
+                        <h3 style="font-size: 1.05em; color: var(--secondary);">Type I Pairing</h3>
                         <p style="font-size: 0.8em;">An efficiently computable homomorphism exists <strong>in one direction</strong>:</p>
                         <div class="math-box" style="font-size: 0.8em; padding: 8px; margin: 8px 0;">
                             $\phi: \mathbb{G}_2 \rightarrow \mathbb{G}_1$
@@ -826,7 +804,7 @@
                         </ul>
                     </div>
                     <div class="card accent-blue" style="padding: 5px 12px;">
-                        <h3 style="font-size: 1.05em;">Type III Pairing</h3>
+                        <h3 style="font-size: 1.05em;">Type II Pairing</h3>
                         <p style="font-size: 0.8em;"><strong>No efficient homomorphism</strong> exists between $\mathbb{G}_1$ and $\mathbb{G}_2$ in either direction.</p>
                         <div class="math-box" style="font-size: 0.8em; padding: 8px; margin: 8px 0;">
                             $e: \mathbb{G}_1 \times \mathbb{G}_2 \rightarrow \mathbb{G}_T$
@@ -835,11 +813,11 @@
                             <li><strong>Bilinearity:</strong> $e(u^a, v^b) = e(u,v)^{ab}$</li>
                             <li><strong>Non-degeneracy:</strong> $e(g_1, g_2) \neq 1_{\mathbb{G}_T}$</li>
                             <li><strong>Computability:</strong> Poly-time for all valid inputs.</li>
-                            <li><strong>Computability:</strong> $e(g^a, g^b) = e(g,g)^{ab}$ — enables hidden multiplicative checks without revealing exponents</li>
+                            <li><strong>$e(g^a, g^b) = e(g,g)^{ab}$:</strong> enables hidden multiplicative checks without revealing exponents</li>
                         </ul>
                     </div>
                     <div class="card accent-gold" style="padding: 5px 12px;">
-                        <h3 style="font-size: 1.05em; color: var(--warning);">Why Type III?</h3>
+                        <h3 style="font-size: 1.05em; color: var(--warning);">Why Type II?</h3>
                         <p style="font-size: 0.8em;">The absence of any connecting homomorphism provides the strongest security guarantees:</p>
                         <ul style="font-size: 0.78em; margin-bottom: 0;">
                             <li><strong>Compact Keys:</strong> Built on BLS12-381 curves with ~256-bit parameters.</li>
@@ -913,7 +891,7 @@
                 </div>
             </section>
 
-            <section data-sec="regabe">
+           <section data-sec="regabe">
                 <h2 style="margin-bottom: 8px;">The Key Curator Model: Core Algorithms</h2>
                 <p style="font-size: 0.9em; margin-bottom: 15px;">The centralized PKG is replaced by a transparent curator executing deterministic polynomial-time algorithms.</p>
 
@@ -923,7 +901,7 @@
                             <span class="num-circle" style="width: 26px; height: 26px; font-size: 12px;">1</span>
                             <h3>Setup($1^\lambda, 1^N$)</h3>
                         </div>
-                        <p>Generates CRS including DPVS bases. <strong>Setup party goes offline permanently.</strong></p>
+                        <p>Generates CRS including DPVS bases. <strong>Setup party goes offline permanently.</strong> No MSK is generated.</p>
                     </div>
                     <div class="algo-card accent-blue">
                         <div class="algo-header">
@@ -932,30 +910,30 @@
                         </div>
                         <p>Run locally. User samples $sk_i \leftarrow \mathbb{Z}_p$, publishes $pk_i = g^{sk_i}$. Curator never sees $sk_i$.</p>
                     </div>
-                    <div class="algo-card accent-purple">
+                    <div class="algo-card accent-blue">
                         <div class="algo-header">
-                            <span class="num-circle" style="width: 26px; height: 26px; font-size: 12px; background: var(--secondary);">3</span>
-                            <h3>Register</h3>
+                            <span class="num-circle" style="width: 26px; height: 26px; font-size: 12px;">3</span>
+                            <h3>Is_Valid</h3>
                         </div>
-                        <p>User sends verified attributes and $pk_i$ to curator for the public directory.</p>
+                        <p>Public verification. Checks the NIZK proof to ensure the user's $pk_i$ is properly structured.</p>
                     </div>
                     <div class="algo-card accent-purple">
                         <div class="algo-header">
-                            <span class="num-circle" style="width: 26px; height: 26px; font-size: 12px; background: var(--secondary);">4</span>
-                            <h3>Update</h3>
+                            <span class="num-circle secondary" style="width: 26px; height: 26px; font-size: 12px;">4</span>
+                            <h3>Aggregate</h3>
                         </div>
-                        <p>Curator aggregates keys to form global $mpk$ and computes $hsk_i$ for cross-term blinding.</p>
+                        <p>Curator aggregates valid keys to form global $mpk$ and computes $hsk_i$ for cross-term blinding.</p>
                     </div>
                     <div class="algo-card accent-green">
                         <div class="algo-header">
-                            <span class="num-circle" style="width: 26px; height: 26px; font-size: 12px; background: var(--success);">5</span>
+                            <span class="num-circle success" style="width: 26px; height: 26px; font-size: 12px;">5</span>
                             <h3>Encrypt</h3>
                         </div>
-                        <p>Uses global $mpk$ and policy matrix $y$. Ciphertext size is $O(|y|)$.</p>
+                        <p>Uses global $mpk$ and policy matrix $y$. Ciphertext size scales dynamically $O(|y|)$.</p>
                     </div>
                     <div class="algo-card accent-green">
                         <div class="algo-header">
-                            <span class="num-circle" style="width: 26px; height: 26px; font-size: 12px; background: var(--success);">6</span>
+                            <span class="num-circle success" style="width: 26px; height: 26px; font-size: 12px;">6</span>
                             <h3>Decrypt</h3>
                         </div>
                         <p>Combines local $sk_i$ and public $hsk_i$. Bilinear pairing isolates exact slot. LSSS unblinds message.</p>
@@ -967,15 +945,58 @@
                     <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
                     <span style="background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">KeyGen</span>
                     <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
-                    <span style="background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Register</span>
+                    <span style="background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Is_Valid</span>
                     <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
-                    <span style="background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Update</span>
+                    <span style="background: rgba(167,139,250,0.15); border: 1px solid rgba(167,139,250,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Aggregate</span>
                     <span style="color: var(--text-muted); font-size: 0.9em;">→</span>
                     <span style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: 6px; padding: 6px 14px; font-size: 0.8em; font-family: var(--font-code);">Encrypt / Decrypt</span>
                 </div>
 
-                <div style="background: var(--card-bg); border-left: 3px solid var(--primary); border-radius: 0 8px 8px 0; padding: 12px 18px; margin-top: 12px; display: flex; gap: 14px; align-items: center;">
+                <div class="card accent-primary" style="padding: 12px 18px; margin-top: 12px;">
                     <p style="font-size: 0.82em; margin: 0;">The Curator never possesses any secret key material — it performs only <strong>public-key aggregation</strong>, a deterministic, auditable operation. Even if compromised, no user's secret key is revealed.</p>
+                </div>
+            </section>
+
+           <section data-sec="regabe">
+                <h2 style="margin-bottom: 20px;">The Key Curator Model: Core Algorithms</h2>
+
+                <div class="grid-2" style="gap: 15px; margin-bottom: 15px;">
+                    <div class="card accent-blue" style="padding: 12px 15px; margin: 0;">
+                        <h3 style="font-size: 1.05em; margin-bottom: 8px;"><span class="num-circle" style="width: 22px; height: 22px; font-size: 11px;">1</span> Setup</h3>
+                        <p style="font-size: 0.78em; margin: 0 0 6px 0;"><strong>Inputs:</strong> Security param $1^\lambda$, max users $1^N$</p>
+                        <p style="font-size: 0.78em; margin: 0;"><strong>Outputs:</strong> Public parameters $crs$. <br><em style="color: var(--primary);">No Master Secret Key is generated.</em></p>
+                    </div>
+                    <div class="card accent-blue" style="padding: 12px 15px; margin: 0;">
+                        <h3 style="font-size: 1.05em; margin-bottom: 8px;"><span class="num-circle" style="width: 22px; height: 22px; font-size: 11px;">2</span> KeyGen</h3>
+                        <p style="font-size: 0.78em; margin: 0 0 6px 0;"><strong>Inputs:</strong> Parameters $crs$</p>
+                        <p style="font-size: 0.78em; margin: 0;"><strong>Outputs:</strong> Secret key $sk_i$, Public key $pk_i$, and a well-formedness proof $\pi_i$.</p>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap: 15px; margin-bottom: 15px;">
+                    <div class="card accent-purple" style="padding: 12px 15px; margin: 0;">
+                        <h3 style="font-size: 1.05em; margin-bottom: 8px;"><span class="num-circle" style="width: 22px; height: 22px; font-size: 11px;">3</span> Is_Valid</h3>
+                        <p style="font-size: 0.78em; margin: 0 0 6px 0;"><strong>Inputs:</strong> $crs$, Public key $pk_i$, Proof $\pi_i$</p>
+                        <p style="font-size: 0.78em; margin: 0;"><strong>Outputs:</strong> $1$ (valid) or $0$ (invalid). Prevents malicious key injection into the MPK.</p>
+                    </div>
+                    <div class="card accent-purple" style="padding: 12px 15px; margin: 0;">
+                        <h3 style="font-size: 1.05em; margin-bottom: 8px;"><span class="num-circle secondary" style="width: 22px; height: 22px; font-size: 11px;">4</span> Aggregate</h3>
+                        <p style="font-size: 0.78em; margin: 0 0 6px 0;"><strong>Inputs:</strong> Parameters $crs$, State $st$, Public key $pk_i$, Attributes $x_i$</p>
+                        <p style="font-size: 0.78em; margin: 0;"><strong>Outputs:</strong> Updated State $st'$, Global Master Public Key $mpk$, and individualized Helper Decryption Keys $hsk_i$.</p>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap: 15px;">
+                    <div class="card accent-green" style="padding: 12px 15px; margin: 0;">
+                        <h3 style="font-size: 1.05em; margin-bottom: 8px;"><span class="num-circle success" style="width: 22px; height: 22px; font-size: 11px;">5</span> Encrypt</h3>
+                        <p style="font-size: 0.78em; margin: 0 0 6px 0;"><strong>Inputs:</strong> Master Public Key $mpk$, Policy $y$, Message $m$</p>
+                        <p style="font-size: 0.78em; margin: 0;"><strong>Outputs:</strong> Ciphertext $ct$.</p>
+                    </div>
+                    <div class="card accent-green" style="padding: 12px 15px; margin: 0;">
+                        <h3 style="font-size: 1.05em; margin-bottom: 8px;"><span class="num-circle success" style="width: 22px; height: 22px; font-size: 11px;">6</span> Decrypt</h3>
+                        <p style="font-size: 0.78em; margin: 0 0 6px 0;"><strong>Inputs:</strong> Secret key $sk_i$, Helper Key $hsk_i$, Ciphertext $ct$</p>
+                        <p style="font-size: 0.78em; margin: 0;"><strong>Outputs:</strong> Message $m$ (if attributes satisfy policy), else $\bot$.</p>
+                    </div>
                 </div>
             </section>
 
