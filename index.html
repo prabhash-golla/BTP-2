@@ -581,6 +581,117 @@
             </section>
 
             <section data-sec="btp1">
+                <h2>The Evolution of Access Control</h2>
+                
+                <div class="timeline-modern">
+                    <div class="timeline-step-modern">
+                        <div class="timeline-marker-modern">1</div>
+                        <div class="timeline-content-modern">
+                            <h3 style="color: var(--primary);">Traditional PKE</h3>
+                            <p><strong>All-or-nothing encryption.</strong> The sender must encrypt data targeting one specific recipient.</p>
+                            <ul>
+                                <li><strong>Pros:</strong> Establishes secure 1-to-1 communication without prior secret-sharing.</li>
+                                <li><strong>Cons:</strong> Massive key management overhead and costly CA infrastructure.</li>
+                                <!-- <li><strong>Cons:</strong> Costly infrastructure due to Certificate Authorities.</li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step-modern">
+                        <div class="timeline-marker-modern">2</div>
+                        <div class="timeline-content-modern">
+                            <h3 style="color: var(--secondary);">Identity-Based (IBE)</h3>
+                            <p><strong>Identity as Public Key.</strong> Uses a unique string (like an email) directly as the public key.</p>
+                            <ul>
+                                <li><strong>Pros:</strong> Eliminates the need for CAs.</li>
+                                <li><strong>Cons:</strong> Requires absolute, high trust on the PKG.</li>
+                                <li><strong>Cons:</strong> PKG has all Secret Keys (Key Escrow).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step-modern">
+                        <div class="timeline-marker-modern">3</div>
+                        <div class="timeline-content-modern">
+                            <h3 style="color: var(--success);">Attribute-Based (ABE)</h3>
+                            <p><strong>Policy in the Math.</strong> Embeds boolean access rules directly into the ciphertext.</p>
+                            <ul>
+                                <li><strong>Pros:</strong> Provides fine-grained, Controlled Access.</li>
+                                <li><strong>Pros:</strong> Enables scalable one-to-many sharing.</li>
+                                <li><strong>Cons:</strong> Still inherits the PKG trust vulnerability.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="btp1">
+                <h2 style="margin-bottom: 20px;">Formal Definitions: IBE & ABE</h2>
+                <div class="grid-2">
+                    <div class="card accent-blue">
+                        <h3>Identity-Based Encryption (IBE)</h3>
+                        <p style="font-size: 0.85em; margin-bottom: 10px;">Introduced by Shamir (1984). A tuple of 4 algorithms where an identity string serves as the public key.</p>
+                        <ul style="font-size: 0.8em;">
+                            <li><strong style="color: var(--primary);">Setup($1^\lambda$):</strong> $\rightarrow (PK, MSK)$</li>
+                            <li><strong style="color: var(--primary);">KeyGen($MSK, ID$):</strong> $\rightarrow SK_{ID}$</li>
+                            <li><strong style="color: var(--primary);">Encrypt($PK, ID, M$):</strong> $\rightarrow CT$</li>
+                            <li><strong style="color: var(--primary);">Decrypt($SK_{ID}, CT$):</strong> $\rightarrow M$ <br><em>(Succeeds if receiver ID matches ciphertext ID)</em></li>
+                        </ul>
+                    </div>
+                    <div class="card accent-purple">
+                        <h3>Attribute-Based Encryption (ABE)</h3>
+                        <p style="font-size: 0.85em; margin-bottom: 10px;">Introduced by Sahai-Waters (2005). Extends IBE to support boolean access policies.</p>
+                        <ul style="font-size: 0.8em;">
+                            <li><strong style="color: var(--secondary);">Setup($1^\lambda$):</strong> $\rightarrow (PK, MSK)$</li>
+                            <li><strong style="color: var(--secondary);">KeyGen($MSK, S$):</strong> $\rightarrow SK_S$ <br><em>(where $S$ is a user's attribute set)</em></li>
+                            <li><strong style="color: var(--secondary);">Encrypt($PK, \mathbb{A}, M$):</strong> $\rightarrow CT$ <br><em>(where $\mathbb{A}$ is an access policy / LSSS matrix)</em></li>
+                            <li><strong style="color: var(--secondary);">Decrypt($SK_S, CT$):</strong> $\rightarrow M$ <br><em>(Succeeds if attributes $S$ satisfy policy $\mathbb{A}$)</em></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="btp1">
+                <h2 style="margin-bottom: 10px;">Formal Security: IND-CPA Game</h2>
+                <p style="font-size: 0.85em; margin-bottom: 20px; color: var(--text-muted);">Indistinguishability under Chosen-Plaintext Attack models adversary capabilities.</p>
+                
+                <div class="timeline-modern" style="margin-top: 10px;">
+                    <div class="timeline-step-modern">
+                        <div class="timeline-marker-modern" style="font-size: 0.8em;">1</div>
+                        <div class="timeline-content-modern" style="padding: 12px;">
+                            <h3 style="color: var(--primary); font-size: 1em;">Setup & Phase 1</h3>
+                            <p>Challenger runs <strong>Setup</strong> and gives Public Parameters ($PK$) to Adversary $\mathcal{A}$.</p>
+                            <p>$\mathcal{A}$ queries Secret Keys for various attribute sets $S_1, S_2, ..., S_q$.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step-modern">
+                        <div class="timeline-marker-modern" style="font-size: 0.8em; border-color: var(--secondary); color: var(--secondary);">2</div>
+                        <div class="timeline-content-modern" style="padding: 12px;">
+                            <h3 style="color: var(--secondary); font-size: 1em;">The Challenge</h3>
+                            <p>$\mathcal{A}$ submits two equal-length messages $M_0, M_1$ and a target policy $\mathbb{A}^*$.</p>
+                            <div style="background: rgba(239, 68, 68, 0.15); border-left: 2px solid var(--danger); padding: 5px 10px; margin: 5px 0;">
+                                <p style="font-size: 0.8em; color: var(--danger); margin: 0;"><strong>Constraint:</strong> No queried $S_i$ can satisfy $\mathbb{A}^*$.</p>
+                            </div>
+                            <p>Challenger flips a coin $b \in \{0,1\}$ and returns $CT^* = Encrypt(PK, \mathbb{A}^*, M_b)$.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step-modern">
+                        <div class="timeline-marker-modern" style="font-size: 0.8em; border-color: var(--success); color: var(--success);">3</div>
+                        <div class="timeline-content-modern" style="padding: 12px;">
+                            <h3 style="color: var(--success); font-size: 1em;">Phase 2 & Guess</h3>
+                            <p>$\mathcal{A}$ may query more keys (still adhering to the constraint).</p>
+                            <p>$\mathcal{A}$ outputs a guess $b'$. The scheme is secure if the advantage is negligible:</p>
+                            <div class="math-box" style="font-size: 0.9em; padding: 5px; margin: 5px 0; overflow: hidden;">
+                                $Adv_{\mathcal{A}}^{IND-CPA} = |\Pr[b' = b] - \frac{1}{2}| \le \epsilon$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section data-sec="btp1">
                 <h2>BTP-I Recap: IBE from Standard CDH</h2>
                 <p>Prior to this semester, we implemented the Döttling-Garg (CRYPTO 2017) non-black-box architecture to prove escrow-free IBE is theoretically possible using only standard Computational Diffie-Hellman (CDH) assumptions.</p>
                 
@@ -702,53 +813,8 @@
                 </div>
             </section>
 
-           <section data-sec="intro">
-                <h2>The Evolution of Access Control</h2>
-                
-                <div class="timeline-modern">
-                    <div class="timeline-step-modern">
-                        <div class="timeline-marker-modern">1</div>
-                        <div class="timeline-content-modern">
-                            <h3 style="color: var(--primary);">Traditional PKE</h3>
-                            <p><strong>All-or-nothing encryption.</strong> The sender must encrypt data targeting one specific recipient.</p>
-                            <ul>
-                                <li><strong>Pros:</strong> Establishes secure 1-to-1 communication without prior secret-sharing.</li>
-                                <li><strong>Cons:</strong> Massive key management overhead and costly CA infrastructure.</li>
-                                <!-- <li><strong>Cons:</strong> Costly infrastructure due to Certificate Authorities.</li> -->
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-step-modern">
-                        <div class="timeline-marker-modern">2</div>
-                        <div class="timeline-content-modern">
-                            <h3 style="color: var(--secondary);">Identity-Based (IBE)</h3>
-                            <p><strong>Identity as Public Key.</strong> Uses a unique string (like an email) directly as the public key.</p>
-                            <ul>
-                                <li><strong>Pros:</strong> Eliminates the need for CAs.</li>
-                                <li><strong>Cons:</strong> Requires absolute, high trust on the PKG.</li>
-                                <li><strong>Cons:</strong> PKG has all Secret Keys (Key Escrow).</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-step-modern">
-                        <div class="timeline-marker-modern">3</div>
-                        <div class="timeline-content-modern">
-                            <h3 style="color: var(--success);">Attribute-Based (ABE)</h3>
-                            <p><strong>Policy in the Math.</strong> Embeds boolean access rules directly into the ciphertext.</p>
-                            <ul>
-                                <li><strong>Pros:</strong> Provides fine-grained, Controlled Access.</li>
-                                <li><strong>Pros:</strong> Enables scalable one-to-many sharing.</li>
-                                <li><strong>Cons:</strong> Still inherits the PKG trust vulnerability.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <section data-sec="intro">
-                <h2 style="margin-bottom: 5px;">Enter Registered ABE (Reg-ABE)</h2>
+                <h2 style="margin-bottom: 5px;">Registered ABE (Reg-ABE)</h2>
                 <p style="font-size: 0.9em; margin-bottom: 25px; color: var(--text-muted);">A modern cryptographic breakthrough (2023) that eliminates the "trusted central authority" problem, shifting power directly back to the users.</p>
                 
                 <div class="grid-3" style="align-items: stretch; gap: 20px;">
@@ -1333,6 +1399,33 @@
                     <div class="card accent-green" style="padding: 12px; text-align: center;">
                         <h3 style="justify-content: center; font-size: 1em; margin-bottom: 5px;">Standard k-Lin Security</h3>
                         <p style="font-size: 0.78em; margin: 0;">Security reductions under $k$-Lin are tighter and better understood than composite subgroup decision assumptions.</p>
+                    </div>
+                </div>
+            </section>
+
+
+            <section data-sec="optimization">
+                <h2 style="margin-bottom: 10px;">The Target Composite-Order Scheme</h2>
+                <p style="font-size: 0.85em; margin-bottom: 20px; color: var(--text-muted);">The foundational Reg-ABE construction by <strong>Hohenberger, Lu, Waters, and Wu (Eurocrypt 2023)</strong> was natively designed in composite-order groups. We target this specific architecture for conversion.</p>
+                
+                <div class="grid-2" style="align-items: stretch;">
+                    <div class="card accent-blue">
+                        <h3>HLWW '23 Subgroup Structure</h3>
+                        <p style="font-size: 0.85em;">Operates in a bilinear group of order $N = p_1 \cdot p_2 \cdot p_3$ (product of three distinct primes).</p>
+                        <ul style="font-size: 0.85em;">
+                            <li><strong style="color: var(--primary);">$\mathbb{G}_{p_1}$ (Data Subgroup):</strong> Used to encode the actual MPK, user attributes, and the plaintext message payload.</li>
+                            <li><strong style="color: var(--secondary);">$\mathbb{G}_{p_2}$ (Blinding Subgroup):</strong> Used by the Key Curator to inject cross-term noise and orthogonal blinding factors into the Helper Secret Keys.</li>
+                            <li><strong style="color: var(--success);">$\mathbb{G}_{p_3}$ (Simulation Subgroup):</strong> Used exclusively during the dual-system security proof to embed semi-functional components.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card accent-red flex-col" style="justify-content: center;">
+                        <h3 style="color: var(--danger); text-align: center;">The Bottleneck & Goal</h3>
+                        <p style="font-size: 0.8em; text-align: center;">To ensure factoring $N$ remains mathematically hard, $N$ must be $\ge 3072$ bits.</p>
+                        <div class="math-box" style="font-size: 0.85em; border-color: var(--danger); color: var(--danger); margin: 10px 0;">
+                            $e(g_{p_1}, g_{p_2}) = 1$
+                        </div>
+                        <p style="font-size: 0.8em; text-align: center;"><strong>Our Objective:</strong> Convert this specific $\mathbb{G}_{p_1} \times \mathbb{G}_{p_2}$ mathematical orthogonality into highly efficient prime-order Dual Pairing Vector Spaces (DPVS).</p>
                     </div>
                 </div>
             </section>
